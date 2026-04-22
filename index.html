@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>ССК | Инструкция по работе с медиапланами</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f0f4f9;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            line-height: 1.45;
+            color: #1e2a3e;
+            padding: 2rem 1.5rem;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        /* header */
+        .hero {
+            background: linear-gradient(135deg, #0b2b3b 0%, #1a4a5f 100%);
+            color: white;
+            border-radius: 2rem;
+            padding: 2rem 2rem 2rem 2rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 12px 25px -10px rgba(0,0,0,0.2);
+        }
+        .hero h1 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-bottom: 0.5rem;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 80%;
+        }
+        .badge-cloud {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(4px);
+            border-radius: 40px;
+            padding: 0.3rem 1rem;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+            font-weight: 500;
+        }
+
+        /* cards grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 2.5rem;
+        }
+        .card {
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            padding: 1.6rem 1.8rem;
+            transition: transform 0.1s ease, box-shadow 0.2s;
+            border: 1px solid #e9eef3;
+        }
+        .card:hover {
+            box-shadow: 0 20px 30px -12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        .card-icon {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+        }
+        .card h3 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: #0f3b4c;
+            border-left: 4px solid #2c7a6e;
+            padding-left: 0.75rem;
+        }
+        .card .sub {
+            color: #4b6a7c;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        .card ul, .card p {
+            color: #2c3e4e;
+            margin: 0.75rem 0;
+            padding-left: 0.2rem;
+        }
+        .card li {
+            margin-left: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        hr {
+            margin: 1rem 0;
+            border: none;
+            height: 1px;
+            background: #e2e8f0;
+        }
+
+        /* info blocks */
+        .info-block {
+            background: #eef2fa;
+            border-radius: 1.2rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            border-left: 6px solid #2c7a6e;
+        }
+        .warning-block {
+            background: #fff6e5;
+            border-left-color: #e67e22;
+        }
+        .danger-block {
+            background: #fee9e6;
+            border-left-color: #c0392b;
+        }
+        .responsibility-block {
+            background: linear-gradient(120deg, #eef6f9 0%, #ffffff 100%);
+            border-left-color: #1e6f5c;
+            margin-bottom: 2rem;
+        }
+        .link-list {
+            background: white;
+            border-radius: 1.2rem;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+        .btn-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #1e4663;
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+            margin-right: 0.8rem;
+            margin-bottom: 0.6rem;
+        }
+        .btn-link:hover {
+            background: #0f2f46;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #2c7a6e;
+            color: #1e4a5f;
+        }
+        .btn-outline:hover {
+            background: #e0f0ee;
+        }
+
+        .source-table-demo {
+            background: #f8fafc;
+            border-radius: 1rem;
+            padding: 0.8rem;
+            font-family: monospace;
+            font-size: 0.8rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border: 1px solid #dce5ef;
+        }
+
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+        }
+        @media (max-width: 680px) {
+            .grid-2col { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 1.8rem; }
+            .hero p { max-width: 100%; }
+            body { padding: 1rem; }
+        }
+
+        footer {
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #5f7f95;
+            border-top: 1px solid #cbdde9;
+            padding-top: 2rem;
+        }
+        .mock-img {
+            background: #eef2f5;
+            border-radius: 0.8rem;
+            padding: 0.8rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #2c6280;
+            border: 1px dashed #b9cfdf;
+            margin: 0.8rem 0;
+        }
+        .mock-img span {
+            font-weight: 500;
+        }
+        .role-badge {
+            display: inline-block;
+            background: #1e4663;
+            color: white;
+            border-radius: 2rem;
+            padding: 0.2rem 0.7rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+<div class="hero">
+<h1>📊 Медиапланы ССК</h1>
+<p><strong>Инструкция: квартальные и еженедельные планы.<br /></strong>Работа в облаке, справочник источников и проверка данных</p>
+</div>
+<!-- два типа МП -->
+<div class="cards-grid">
+<div class="card">
+<div class="card-icon">📅🗓️</div>
+<h3>Квартальный МП</h3>
+<div class="sub">по месяцам &middot; бюджет + лиды + CPL</div>
+<ul>
+<li>Формируем планы бюджета, лидов и CPL на квартал.</li>
+<li>Раз в месяц копируем <strong>факт расхода</strong> из еженедельного МП &rarr; колонки &laquo;Бюджет .. ФАКТ&raquo;.</li>
+<li>Содержит плановые показатели и финальные факты бюджета&nbsp;по месяцам.</li>
+</ul>
+<div class="mock-img"><img style="max-width: 100%; border-radius: 12px; margin: 0.5rem 0;" src="https://s05nrg.storage.yandex.net/rdisk/a4bc3b9878e7deef768ac14df7680700f2b9bd49349925dc9fdbdbb708afae97/69e8d2ae/sWR1lh95e5gHID9ekll0y-ZLHVgkx93fYMSTMFkqn4sgxXfMlIrEzQ9q2uZs0Yngw9l6OZWoqMIelU-DjjHQQQ==?uid=912145063&amp;filename=kv.png&amp;disposition=inline&amp;hash=&amp;limit=0&amp;content_type=image%2Fpng&amp;owner_uid=912145063&amp;fsize=224216&amp;hid=0dbb8856df9f530688afffbbb1291b68&amp;media_type=image&amp;tknv=v3&amp;etag=dafdf8f1bb4e36e8e71704aeebfd32f7&amp;ts=6500cd8b78780&amp;s=ddc7f6da64babe18f6558307b25fee81bc2d190d18a06e51202d2b3ccf4a451b&amp;pb=U2FsdGVkX194yAmmyfCg4n6NVnjPFtGDRQREHLRkj38YtqoBKn0PDcv6tgVJ9eXtwLi8bgWk8cIyk87sfMu91OioybSgsH_Mjhje-Re5JSg" alt="Пример квартального медиаплана" /></div>
+</div>
+<div class="card">
+<div class="card-icon">📆⚡</div>
+<h3>Еженедельный МП</h3>
+<div class="sub">по неделям &middot; только фактические расходы</div>
+<ul>
+<li>Заносим <strong>фактические расходы за неделю</strong> по источникам рекламы.</li>
+<li>По итогу месяца суммируем расход &rarr; переносим в колонку месяца квартального МП.</li>
+<li>Учитываем, что первая и последняя недели месяца могут быть не полными.</li>
+</ul>
+<div class="mock-img"><img style="max-width: 100%; border-radius: 12px; margin: 0.5rem 0;" src="https://s09nrg.storage.yandex.net/rdisk/4ecd7920d25b160abdb5f08e5fbe58c91d58fb91e1a6ffb9dac5907e83c6d6bc/69e8d33a/sWR1lh95e5gHID9ekll0y88nr32kLGLEd76v-skZbLTKQxOMm7uFdjK8fnbpOVa5Vp9ypGcwwhXHLUV_MHTLFg==?uid=912145063&amp;filename=egh.png&amp;disposition=inline&amp;hash=&amp;limit=0&amp;content_type=image%2Fpng&amp;owner_uid=912145063&amp;fsize=71124&amp;hid=dd365ed90e8923661f253be8aca1fe53&amp;media_type=image&amp;tknv=v3&amp;etag=68351c5eedd28048ecbb3c2a8290d658&amp;ts=6500ce10fc280&amp;s=23eae01593dd9208bb6f9fb11329d8f251383d347e0e6cf2c3dac96059f663a1&amp;pb=U2FsdGVkX1-MrVn_dNI7Vna4i7qCh6WV1xBBHJcrZMw2pKHdwrBjEliV0tDiYyvbtDrWib_ZAWIuBC_umY8KInOk0Io3FdXiKTMgY3JqpMQ" alt="Ежемесячный" /></div>
+</div>
+</div>
+<!-- Облако: ссылка и правила -->
+<div class="info-block">
+<div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; justify-content: space-between;">
+<div><strong>☁️ Все МП находятся и обрабатываются в облаке ССК</strong><br />Офлайн-версии больше не пересылаем.</div>
+<a class="btn-link" href="https://cloud.sskuban.ru/s/JRqdp5gyykssLtD" target="_blank" rel="noopener">🔗 Открыть облако МП &rarr;</a></div>
+<hr />
+<p><strong>Правила работы в облаке:</strong><br /> &bull; Если планируете изменить источники, добавить/убрать каналы, перераспределить бюджеты &mdash; всё делается <strong>прямо в облаке</strong>.<br /> &bull; <span style="background: #f9e3b0; padding: 0.1rem 0.3rem;">⚠️ Любые изменения предварительно согласовываются с руководителем.</span><br /> &bull; 🚫 <strong>Запрещено менять название МП</strong> в облаке!<br /> &nbsp;&nbsp;&rarr; &laquo;Ежемесячный и квартальный Шаблон МП&raquo; &mdash; названия квартальных МП<br /> &nbsp;&nbsp;&rarr; &laquo;Еженедельный Шаблон МП&raquo; &mdash; названия еженедельных МП</p>
+</div>
+<!-- Справочник источников -->
+<div class="info-block">
+<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.6rem;">
+<div><strong>📚 Справочник источников ССК</strong> &mdash; единый источник истины</div>
+<a class="btn-link btn-outline" href="https://docs.google.com/spreadsheets/d/1Jwl64t_2tgnghzLglqgqSbjNjGceo36Rn1rcbolpZVE/edit?usp=sharing" target="_blank" rel="noopener">🔗 Открыть справочник &rarr;</a></div>
+<p>В статьях расходов указываются <strong>только источники рекламы из справочника</strong>. Название должно строго соответствовать &mdash; копируйте название из справочника и вставляйте в МП, чтобы избежать ошибок в отчётах.</p>
+<div class="source-table-demo">📋 Пример: "<code>Яндекс Директ", "2Гис"</code>&nbsp;&rarr; только так, как в справочнике.<br /> ❌ Нельзя: "Яндекс Директ поиск" или "Яндекс-директ", "2ГИС" или "2GIS".</div>
+<div class="mock-img"><img style="max-width: 100%; border-radius: 12px; margin: 0.5rem 0;" src="https://s116klg.storage.yandex.net/rdisk/4ddd1c1b61423bbc49d01a0cfff05e48a628f5da63840ad96b55a5ff0f8f67f0/69e8d48a/sWR1lh95e5gHID9ekll0y6sngpMioGt_1lIdVkFMEKd4oV8w95tvtK2WNUx-IG3NVdMndM13WCu-fpe--SrQUA==?uid=912145063&amp;filename=sp.png&amp;disposition=inline&amp;hash=&amp;limit=0&amp;content_type=image%2Fpng&amp;owner_uid=912145063&amp;fsize=137605&amp;hid=4f9da8642668cbe8a2ede824a8ef9418&amp;media_type=image&amp;tknv=v3&amp;etag=2e71de5816d94d2a894047a33bb25119&amp;ts=6500cf516b680&amp;s=581218eeceb4dd9ed01ea96f0665ac8f54e10228ed1599f37f6bb3eab7523ed2&amp;pb=U2FsdGVkX1_jj_ftRGx_zz5BU24K6pnr5OIa96KGOeYHqjEaT5-DtDx9c9gUeIAhzKnGQQf0o57XcL5pgsfKdTuq-p1GLLZhtQGkQCQkeeg" alt="Справочник" /></div>
+</div>
+<!-- БЛОК ОТВЕТСТВЕННОСТИ: кто заполняет и контролирует (добавлен по запросу) -->
+<div class="info-block responsibility-block">
+<div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem;"><span style="font-size: 2rem;">👥</span> <strong style="font-size: 1.4rem;">Ответственные за заполнение и контроль</strong></div>
+<div class="grid-2col" style="margin-top: 0.5rem;">
+<div>
+<p><span class="role-badge">🖥️ Интернет-маркетологи</span> &rarr; заполняют данные по <strong>онлайн источникам</strong> (контекст, таргет и т.д.)</p>
+<p><span class="role-badge">📻 Маркетологи по оффлайну</span> &rarr; заполняют данные по <strong>оффлайн источникам</strong> (ТВ, радио, билборды, пресса)</p>
+<p><span class="role-badge">🏷️ Бренд-менеджеры</span> &rarr; заполняют <strong>остальные источники</strong> (PR, спецпроекты, партнерства, агентства)</p>
+</div>
+<div style="background: #f2f6fc; border-radius: 1rem; padding: 0.8rem 1rem;"><span style="font-size: 1.2rem;">🔍</span> <strong>Контроль и проверка</strong><br /> <span style="font-size: 1.5rem; font-weight: bold; color: #1e4663;">РГПП</span><br /> <span style="font-size: 0.85rem;">(Руководители групп по планированию и продвижению)</span>
+<p style="margin-top: 0.6rem;">✔️ Проверяет корректность заполнения&nbsp;своих МП<br /> ✔️ Контролирует соответствие источников справочнику<br /> ✔️ Согласовывает изменения и финальную версию перед сдачей</p>
+</div>
+</div>
+<hr />
+<p style="font-size: 0.85rem; margin-top: 0.5rem;"><strong>Важно:</strong> Все ответственные вносят данные в еженедельные и квартальные МП по своим направлениям. РГПП является последней инстанцией перед отправкой данных в отчёты.</p>
+</div>
+<!-- Новый источник + задача -->
+<div class="cards-grid" style="margin-bottom: 1.8rem;">
+<div class="card">
+<div class="card-icon">🆕➕</div>
+<h3>Новый источник рекламы</h3>
+<p>Если планируете использовать <strong>новый источник</strong> &mdash; сначала подайте данные в специальной задаче по форме:</p>
+<a class="btn-link" style="margin: 0.5rem 0 0.8rem 0;" href="https://bx.sskuban.ru/company/personal/user/41643/tasks/task/view/98949/" target="_blank" rel="noopener">📋 Открыть задачу на добавление источника &rarr;</a>
+<p style="font-size: 0.85rem; background: #f0f3f8; padding: 0.4rem 0.8rem; border-radius: 0.7rem;">⚠️ Важно: в названиях источников <strong>не используем точку</strong> (это может вызывать ошибки в системах).</p>
+</div>
+<div class="card">
+<div class="card-icon">✅🔍</div>
+<h3>Проверка МП &mdash; вы последняя инстанция</h3>
+<p><strong>Вы сдаёте/обновляете МП</strong> &rarr; аналитика и IT забирают данные в отчёты. После вас никто не переделывает и не перепроверяет.</p>
+<ul>
+<li>Контролируйте верность заполнения данных, итогов и сумм.</li>
+<li>Ошибки в бюджетах, CPL, лидах останутся незамеченными &mdash; это повлияет на всю отчётность.</li>
+<li>Перепроверьте соответствие источников справочнику, корректность формул и итоговых значений.</li>
+</ul>
+</div>
+</div>
+<!-- Запреты и памятка в виде списка -->
+<div class="danger-block"><strong>🚫 Ключевые запреты и правила (памятка)</strong>
+<div class="grid-2col" style="margin-top: 1rem;">
+<div>
+<p>❌ Не менять название МП в облаке<br /> ❌ Не использовать источник, которого нет в справочнике<br /> ❌ Не добавлять источник без оформления в задаче<br /> ❌ Не пересылать файлы МП офлайн (Excel)</p>
+</div>
+<div>
+<p>✅ Все изменения &mdash; только в облаке и после согласования с руководителем<br /> ✅ Названия источников строго копировать из справочника<br /> ✅ Перед сдачей МП перепроверить итоги и суммы<br /> ✅ Еженедельный МП &rarr; фактические расходы, а квартальный &rarr; план + факт (копируется из еженедельного)</p>
+</div>
+</div>
+</div>
+<!-- Процесс: квартальный + еженедельный связка -->
+<div class="info-block warning-block" style="margin-top: 1rem;"><strong>🔁 Жизненный цикл данных: еженедельный &rarr; квартальный</strong>
+<p style="margin-top: 0.5rem;">1. Каждую неделю вносим фактические расходы по источникам в <strong>еженедельный МП</strong>.<br /> 2. В конце месяца суммируем расход за месяц (в колонке месяца еженедельного МП).<br /> 3. Копируем сумму факта расхода за месяц в <strong>квартальный МП</strong> &rarr; в колонки &laquo;Бюджет .. ФАКТ&raquo;.</p>
+<div class="mock-img" style="background: #fff2e0;"><img style="max-width: 100%; border-radius: 12px; margin: 0.5rem 0;" src="https://s30nrg.storage.yandex.net/rdisk/32baf47f1fe1698a7a0f752e1b5284193147d73bbc728306a6e47708a0c284cd/69e8d7c1/sWR1lh95e5gHID9ekll0ywbxJqR-Fpw6u-cewVQ47xR0N2sjZfBAJFWQWW7Rh6ObtJD4TUbBjHNKUDOkO-EYYA==?uid=912145063&amp;filename=kv2.png&amp;disposition=inline&amp;hash=&amp;limit=0&amp;content_type=image%2Fpng&amp;owner_uid=912145063&amp;fsize=154420&amp;hid=e0b5e5d19006869ce8e93cfc935afcaa&amp;media_type=image&amp;tknv=v3&amp;etag=f0e2e9f545f710d7ccb4fe4bf05da96c&amp;ts=6500d2624b240&amp;s=5c182223c3b168d7da588a7af5ff348aaeee7e7b3a20b31c0b264d8e58a9c2b7&amp;pb=U2FsdGVkX19EMVMWVpBNQG6AW8ABBsM6pMPIuPCxTzNpei9OAcNOC_DALUhgaMOKCSPguI7KIo2U5CFlAgs0dPdPTLAN9XMlJBZjLVzhhYc" alt="Факт" /></div>
+</div>
+<!-- Быстрый доступ ко всем ссылкам -->
+<div class="link-list">
+<div style="font-weight: 600; margin-bottom: 0.8rem;">🔗 Полезные ссылки (сохраните):</div>
+<div style="display: flex; flex-wrap: wrap; gap: 0.6rem;"><a class="btn-link" style="background: #0f3b4c;" href="https://cloud.sskuban.ru/s/JRqdp5gyykssLtD" target="_blank">☁️ Облако с МП</a> <a class="btn-link btn-outline" href="https://docs.google.com/spreadsheets/d/1Jwl64t_2tgnghzLglqgqSbjNjGceo36Rn1rcbolpZVE/edit?usp=sharing" target="_blank">📖 Справочник источников</a> <a class="btn-link btn-outline" href="https://bx.sskuban.ru/company/personal/user/41643/tasks/task/view/98949/" target="_blank">📝 Задача на новый источник</a></div>
+<hr />
+<p style="font-size: 0.85rem; margin-top: 0.6rem;"><strong>Важно:</strong> Все медиапланы обрабатываются только в облаке. Любое изменение (добавить/убрать источник, перераспределить бюджет) &mdash; согласовываем с руководителем и вносим в облачную версию. Офлайн-копии не принимаются.</p>
+</div>
+<!-- дополнительный блок про итоговую проверку -->
+<div style="background: #e1f0f5; border-radius: 1rem; padding: 1.2rem 1.8rem; margin: 1.8rem 0; text-align: center;"><span style="font-size: 1.6rem;">🧑&zwj;💼</span>
+<p style="font-weight: 500; margin-top: 0.3rem;"><strong>Вы &mdash; последняя инстанция!</strong> После вашей сдачи данные уходят в сводные отчёты без дополнительной проверки. Перепроверяйте суммы, соответствие источников и итоги.</p>
+<h1 style="font-size: 1.2rem;">⚡ <strong>Чек-лист перед сдачей:</strong></h1>
+<h2 style="font-size: 0.8rem;">✅ название файлов МП не изменено<br />✅ формулы итогов, сумм работают и верные<br />✅ все источники использованы только из справочника<br /><strong>🔁</strong> если были изменения, изменения в МП согласованы и внесены<br /><strong>🔁</strong> по окончании месяца, факт за месяц продублирован из еженедельного МП в квартальный</h2>
+</div>
+<footer>&copy; ССК &mdash; система управления медиапланами. Актуальная версия инструкции всегда в облаке.<br /> При возникновении вопросов &mdash; обратитесь к <a href="https://bx.sskuban.ru/company/personal/user/41643/">аналитику ССК</a>.</footer></div></body>
+</html>
