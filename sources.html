@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>ССК | Маркировка рекламы: UTM, коллтрекинг, QR, промокоды</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f0f4f9;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            line-height: 1.45;
+            color: #1e2a3e;
+            padding: 2rem 1.5rem;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        /* header */
+        .hero {
+            background: linear-gradient(135deg, #0b2b3b 0%, #1a4a5f 100%);
+            color: white;
+            border-radius: 2rem;
+            padding: 2rem 2rem 2rem 2rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 12px 25px -10px rgba(0,0,0,0.2);
+        }
+        .hero h1 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-bottom: 0.5rem;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 80%;
+        }
+        .badge-cloud {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(4px);
+            border-radius: 40px;
+            padding: 0.3rem 1rem;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+            font-weight: 500;
+        }
+
+        /* cards grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 2.5rem;
+        }
+        .card {
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            padding: 1.6rem 1.8rem;
+            transition: transform 0.1s ease, box-shadow 0.2s;
+            border: 1px solid #e9eef3;
+        }
+        .card:hover {
+            box-shadow: 0 20px 30px -12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        .card-icon {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+        }
+        .card h3 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: #0f3b4c;
+            border-left: 4px solid #2c7a6e;
+            padding-left: 0.75rem;
+        }
+        .card .sub {
+            color: #4b6a7c;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        .card ul, .card p {
+            color: #2c3e4e;
+            margin: 0.75rem 0;
+            padding-left: 0.2rem;
+        }
+        .card li {
+            margin-left: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        hr {
+            margin: 1rem 0;
+            border: none;
+            height: 1px;
+            background: #e2e8f0;
+        }
+
+        /* info blocks */
+        .info-block {
+            background: #eef2fa;
+            border-radius: 1.2rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            border-left: 6px solid #2c7a6e;
+        }
+        .warning-block {
+            background: #fff6e5;
+            border-left-color: #e67e22;
+        }
+        .danger-block {
+            background: #fee9e6;
+            border-left-color: #c0392b;
+        }
+        .responsibility-block {
+            background: linear-gradient(120deg, #eef6f9 0%, #ffffff 100%);
+            border-left-color: #1e6f5c;
+            margin-bottom: 2rem;
+        }
+        .link-list {
+            background: white;
+            border-radius: 1.2rem;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+        .btn-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #1e4663;
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+            margin-right: 0.8rem;
+            margin-bottom: 0.6rem;
+        }
+        .btn-link:hover {
+            background: #0f2f46;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #2c7a6e;
+            color: #1e4a5f;
+        }
+        .btn-outline:hover {
+            background: #e0f0ee;
+        }
+
+        .source-table-demo {
+            background: #f8fafc;
+            border-radius: 1rem;
+            padding: 0.8rem;
+            font-family: monospace;
+            font-size: 0.8rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border: 1px solid #dce5ef;
+        }
+
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+        }
+        @media (max-width: 680px) {
+            .grid-2col { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 1.8rem; }
+            .hero p { max-width: 100%; }
+            body { padding: 1rem; }
+        }
+
+        footer {
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #5f7f95;
+            border-top: 1px solid #cbdde9;
+            padding-top: 2rem;
+        }
+        .mock-img {
+            background: #eef2f5;
+            border-radius: 0.8rem;
+            padding: 0.8rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #2c6280;
+            border: 1px dashed #b9cfdf;
+            margin: 0.8rem 0;
+        }
+        .mock-img span {
+            font-weight: 500;
+        }
+        .role-badge {
+            display: inline-block;
+            background: #1e4663;
+            color: white;
+            border-radius: 2rem;
+            padding: 0.2rem 0.7rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+            margin-right: 0.5rem;
+        }
+        .top-menu {
+        margin: 0 0 20px 0;
+        padding: 10px 0;
+        border-bottom: 1px solid #ddd;
+        font-family: inherit;
+    }
+    .top-menu ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        gap: 25px;
+    }
+    .top-menu li {
+        margin: 0;
+    }
+    .top-menu a {
+        text-decoration: none;
+        color: #0066cc;
+        font-size: 1rem;
+        padding: 5px 0;
+        display: inline-block;
+    }
+    .top-menu a:hover {
+        text-decoration: underline;
+        color: #004499;
+    }
+    .top-menu a.active {
+        font-weight: bold;
+        color: #000;
+        text-decoration: none;
+        border-bottom: 2px solid #0066cc;
+    }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            background: #f5f9ff;
+            color: #1a2c3e;
+            line-height: 1.45;
+            scroll-behavior: smooth;
+        }
+
+        .wrapper {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        .site-header {
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e0edf5;
+            padding-bottom: 1.2rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 1rem;
+        }
+        .logo-area h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #0b4b6e, #1f7ca8);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+        .logo-area p {
+            font-size: 0.85rem;
+            color: #4a6f8c;
+            margin-top: 0.2rem;
+        }
+        .badge-version {
+            background: #eef2fa;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #1a5d7c;
+            border: 1px solid #cde0ef;
+        }
+
+        .quick-nav {
+            background: white;
+            border-radius: 2rem;
+            padding: 0.5rem 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            border: 1px solid #e2edf7;
+        }
+        .quick-nav a {
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #2c6688;
+            padding: 0.4rem 0.9rem;
+            border-radius: 2rem;
+            transition: 0.2s;
+        }
+        .quick-nav a:hover {
+            background: #e5f0fa;
+            color: #0a4b6e;
+        }
+
+        .section-card {
+            background: #ffffff;
+            border-radius: 28px;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.02), 0 2px 6px rgba(0,0,0,0.03);
+            margin-bottom: 2rem;
+            padding: 1.8rem 2rem;
+            border: 1px solid #eef2f8;
+            transition: all 0.2s;
+        }
+        .section-title {
+            font-size: 1.6rem;
+            font-weight: 650;
+            margin-bottom: 1rem;
+            color: #0a3650;
+            border-left: 5px solid #2c9bc8;
+            padding-left: 1rem;
+        }
+        .subsection-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 1.2rem 0 0.7rem 0;
+            color: #1f6f9b;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        hr {
+            margin: 1rem 0;
+            border: 0;
+            height: 1px;
+            background: #e4edf5;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.2rem;
+            margin: 1rem 0;
+        }
+        .method-card {
+            background: #fafdff;
+            border-radius: 20px;
+            padding: 1rem 1.2rem;
+            border: 1px solid #e2eff9;
+        }
+        .code-block {
+            background: #f0f5fa;
+            padding: 1rem 1.2rem;
+            border-radius: 18px;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+            color: #1c4f72;
+            border: 1px solid #d6e4f0;
+            margin: 1rem 0;
+        }
+        .alert {
+            background: #fff8e6;
+            border-left: 4px solid #f0b342;
+            padding: 0.9rem 1.2rem;
+            border-radius: 16px;
+            margin: 1rem 0;
+        }
+        .info-note {
+            background: #eef5fc;
+            border-left: 4px solid #2c9bc8;
+            padding: 0.9rem 1.2rem;
+            border-radius: 16px;
+            margin: 1rem 0;
+        }
+        .btn-outline {
+            display: inline-block;
+            background: white;
+            border: 1px solid #c2daef;
+            padding: 0.45rem 1.2rem;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 500;
+            color: #1f7198;
+            transition: 0.2s;
+            margin-top: 0.3rem;
+            font-size: 0.85rem;
+        }
+        .btn-outline:hover {
+            background: #eef3fc;
+            border-color: #8fb9d8;
+        }
+        .footer {
+            margin-top: 2.5rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #6b89a3;
+            border-top: 1px solid #e0ecf5;
+            padding-top: 2rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+        th, td {
+            text-align: left;
+            padding: 0.7rem 0.5rem;
+            border-bottom: 1px solid #e9f0f6;
+            vertical-align: top;
+        }
+        th {
+            background: #f7fafd;
+            font-weight: 600;
+            color: #1b5b7e;
+        }
+        .mark {
+            background: #fff0cf;
+            padding: 0.1rem 0.3rem;
+            border-radius: 8px;
+            font-weight: 500;
+            color: #b36200;
+        }
+        @media (max-width: 700px) {
+            .wrapper {
+                padding: 1rem;
+            }
+            .section-card {
+                padding: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+<div class="top-menu">
+<ul>
+<li><a href="../sskmp/">Инструкция по МП</a></li>
+<li><a class="active" href="../sskmp/sources.html">Разметка источников</a></li>
+</ul>
+</div>
+<div class="hero">
+<h1>📊&nbsp;Маркировка рекламы</h1>
+<p><strong>Движение данных, сквозная аналитика. <br /></strong>UTM, коллтрекинг, QR коды, справочники, телефонные номера</p>
+</div>
+<!-- 1. Базовая схема (из брошюры) -->
+<div id="howitworks" class="section-card">
+<div class="section-title">🔄 Как отслеживаются рекламные источники у нас</div>
+<p>В компании все рекламные каналы (контекст, соцсети, радио, наружка, сайты) фиксируются в <strong>едином&nbsp;справочнике</strong>. Каждому источнику присваиваются цифровые метки: UTM Source/Medium, телефон/SIP, а каждому ЖК &mdash; своя метка UTM в Campaign/Content. Это позволяет автоматически связывать лиды, звонки с конкретным источником и ЖК в Битрикс24.</p>
+<div class="info-note">🧩 <strong>Синхронизация справочников с Б24</strong> &mdash; автоматическая, каждые 30 минут. Все данные из телефонии Mango, виртуальной АТС, колл-центра, рекламных систем поступают в единую базу &mdash;&nbsp;Б24.</div>
+<div class="grid-2">
+<div class="method-card">📌 <strong>Перечень источников</strong> &mdash; в справочнике источников (более 20+ типов: контекст, таргет, радио, ТВ, билборды и пр.)</div>
+<div class="method-card">🏢 <strong>Перечень ЖК</strong> &mdash; в справочнике ЖК, каждому проекту присвоена уникальная UTM-метка (dolina, vklyuchi, ...)</div>
+</div>
+<p><strong>Главное правило:</strong> в любой ссылке, рекламной кампании одновременно используются <span class="mark">UTM Источника + UTM ЖК</span>. Без регистрации источника &mdash; лид не определится.</p>
+</div>
+<!-- 2. Способы отслеживания (UTM, телефон, комбинации) -->
+<div id="methods" class="section-card">
+<div class="section-title">📡 Способы отслеживания&nbsp;и комбинации</div>
+<p style="font-size: .8rem;">В зависимости от канала используются разные варианты идентификации. Все комбинации поддерживаются нашей системой:</p>
+<table>
+<thead>
+<tr>
+<th>Связка меток</th>
+<th>Пример использования</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>UTM</strong></td>
+<td>Онлайн реклама, посты, рассылки, QR в наружной рекламе, новости, ссылки</td>
+</tr>
+<tr>
+<td><strong>UTM + Телефон</strong></td>
+<td>Онлайн реклама, оффлайн реклама с QR кодом</td>
+</tr>
+<tr>
+<td><strong>Телефон, SIP</strong></td>
+<td>Радио, ТВ, наружная реклама без QR</td>
+</tr>
+<tr>
+<td><strong>UTM + SIP</strong></td>
+<td>Метки с динамическим SIP-номером для агрегаторов</td>
+</tr>
+<tr>
+<td><strong>Прямая интеграция с Б24</strong></td>
+<td>Партнёрские системы, виджеты на сайте</td>
+</tr>
+<tr>
+<td><strong>Промокоды или ручное указание</strong></td>
+<td>Офлайн-обращения, менеджер вносит источник и ЖК вручную</td>
+</tr>
+</tbody>
+</table>
+<div class="alert">🚨 <strong>Важно:</strong> у каждого источника должен быть как минимум один идентификатор: UTM, телефон, SIP или прямая интеграция. Дублирование UTM или номера между разными источниками запрещено &mdash; приведёт к смешению данных.</div>
+</div>
+<!-- 3. UTM-метки: подробно + примеры из брошюры -->
+<div id="utm" class="section-card">
+<div class="section-title">🏷️ UTM-метки: стандарты и примеры (справочники)</div>
+<p><strong>UTM Source и Medium источника</strong> берутся из <em>Справочника UTM</em> (например, avito, yandex_direct, 2gismedia, vk_ads). <br /><strong>Метка ЖК</strong> для utm_campaign / utm_content &mdash; из <em>Справочника ЖК</em> (dolina, vklyuchi, ...).</p>
+<div class="subsection-title">✅ Корректные примеры из брошюры ССК</div>
+<div class="code-block"><strong>Пример 1 (Avito):</strong><br /> utm_source=<span class="mark">avito</span>&amp;utm_medium=cpc&amp;utm_campaign=sale2026&amp;utm_content=<span class="mark">dolina</span><br /><br /> <strong>Пример 2 (Яндекс Директ с подстановками):</strong><br /> utm_source=<span class="mark">yandex_direct</span>&amp;utm_medium=cpc&amp;utm_campaign={campaign_name}|{campaign_id}|{source_type}&amp;utm_content=<span class="mark">dolina</span>|{gbid}|{ad_id}|{phrase_id}|{source}|{device_type}|{banner_id}|{campaign_type}&amp;utm_term={keyword}<br /><br /> <strong>Пример 3 (2Гис):</strong><br /> utm_source=<span class="mark">2gismedia</span>&amp;utm_medium=cpc&amp;utm_campaign=<span class="mark">dolina</span>|sale2026</div>
+<p>Перед созданием ссылки проверьте уникальность связки utm_source + utm_campaign (с меткой ЖК) в справочнике UTM. Если метки нет &mdash; заведите новый источник через задачу (см. раздел &laquo;Регистрация&raquo;).</p>
+</div>
+<!-- 4. QR-коды для офлайн-рекламы (новый раздел) -->
+<div id="qr" class="section-card">
+<div class="section-title">📲 QR-коды: мост между офлайн и онлайн-отслеживанием</div>
+<p>QR-коды на печатной продукции, билбордах, листовках, в журналах &mdash; эффективный способ маркировки офлайн-источников. Принцип: QR ведёт на лендинг или сайт с <strong>предустановленными UTM-метками</strong>, которые регистрируются в справочнике.</p>
+<div class="grid-2">
+<div class="method-card">🔹 <strong>Как использовать:</strong><br /> - Зарегистрируйте источник (например, &laquo;Журнал Интерьер&raquo;, &laquo;Билборд на Ленина&raquo;).<br /> - Сформируйте короткую ссылку вида: <code>site.ru/zhk?utm_source=magazine_interior&amp;utm_medium=qr&amp;utm_campaign=may2026&amp;utm_content=dolina</code>.<br /> - Сгенерируйте QR-код через любой генератор.<br /> - Разместите на носителе.</div>
+<div class="method-card">🔸 <strong>Важные правила:</strong><br /> - UTM-метка источника должна быть уникальной и внесена в справочник UTM.<br /> - Каждый QR-код для разных кампаний/носителей &mdash; отдельный источник.<br /> - Отслеживайте переходы в Б24 и аналитических отчётах (Qlik).</div>
+</div>
+<div class="info-note">📌 <strong>Пример QR-кампании:</strong> реклама ЖК &laquo;Долина&raquo; в газете &laquo;Вечерний город&raquo;. Регистрируем источник &laquo;Газета Вечерний город&raquo;, UTM: utm_source=gazeta_vecherniy&amp;utm_medium=qr&amp;utm_campaign=summer2026&amp;utm_content=dolina. QR-код на страницу с формой заявки. Система идентифицирует все заявки с этого QR как пришедшие из газеты.</div>
+</div>
+<!-- 5. Телефоны, коллтрекинг, SIP (из брошюры задачи) -->
+<div id="phones" class="section-card">
+<div class="section-title">📞 Отслеживание по телефонным номерам / SIP и динамический коллтрекинг</div>
+<p><strong>Справочник номеров и SIP активностей</strong> содержит все телефоны, используемые в рекламе. Каждый номер или SIP-аккаунт жёстко привязывается к источнику и ЖК. Звонок на такой номер автоматически определяет канал.</p>
+<div class="grid-2">
+<div>
+<ul style="margin-left: 1.2rem;">
+<li>✔ Выделение новых номеров, SIP &rarr; <a href="https://bx.sskuban.ru/company/personal/user/41643/tasks/task/view/39011/" target="_blank">задача на телефоны/SIP</a></li>
+<li>✔ Динамический коллтрекинг для сайтов &rarr; <a href="https://bx.sskuban.ru/company/personal/user/41643/tasks/task/view/108583/" target="_blank">задача на коллтрекинг</a></li>
+<li>✔ Регистрация источника и привязка номера &rarr; <a href="https://bx.sskuban.ru/company/personal/user/41643/tasks/task/view/98949/" target="_blank">задача по источникам и ЖК</a></li>
+</ul>
+</div>
+<div class="method-card"><strong>Пример: радио Реклама</strong><br /> Запрашиваем новый номер телефона через задачу. После регистрации в справочнике номер привязывается к радио-источнику. Звонки на этот номер в Б24 упадут с правильной меткой.</div>
+</div>
+<div class="alert">🔔 Номер телефона или SIP могут использоваться как самостоятельный идентификатор (если UTM нет). Главное &mdash; уникальность номера для одного источника.</div>
+</div>
+<!-- 6. Регистрация нового источника (полный шаблон из брошюры) -->
+<div id="registry" class="section-card">
+<div class="section-title">📝 Регистрация нового источника (которого нет в справочнике)</div>
+<p><strong>Подайте данные через задачу Б24:</strong> <a class="btn-outline" href="https://bx.sskuban.ru/company/personal/user/41643/tasks/task/view/98949/" target="_blank">🔗 Задача&nbsp;по учёту источников</a></p>
+<div class="info-note"><strong>Структура заявки:</strong><br /> 1️⃣ <strong>Группа источника</strong> (из перечня: контекстная реклама, радио, SMM, офлайн-мероприятие и др.)<br /> 2️⃣ <strong>Новое название источника</strong> (уникальное, понятное)<br /> 3️⃣ <strong>UTM Source и Medium</strong> (если есть) &mdash; уникальные<br /> 4️⃣ <strong>Номер телефона / SIP</strong> (если требуется)<br /> 5️⃣ <strong>По какому ЖК</strong> (конкретный или &laquo;Все ЖК&raquo;)<br /> 6️⃣ <strong>Прямая интеграция с Б24</strong> (если есть, указать детали)<br /> <span class="mark">Важно:</span> Если выбираете &laquo;Все ЖК&raquo;, данные не привяжутся к конкретному ЖК и попадут в категорию &laquo;Нет данных&raquo;.</div>
+<p><strong>Дополнительные правила:</strong> перед подачей проверьте, что UTM и телефон отсутствуют в существующих справочниках (нет дублей). После регистрации источник появится в справочнике и синхронизируется с Б24.</p>
+</div>
+<!-- 7. Регистрация активности (когда источник уже есть, а запускаем рекламу по ЖК) -->
+<div id="activity" class="section-card">
+<div class="section-title">⚙️ Регистрация активности в источнике (запуск рекламы ЖК)</div>
+<p>Если источник уже был заведён в справочнике, но вы запускаете новую кампанию для конкретного ЖК, необходимо зарегистрировать <strong>активность</strong>. Данные подаются отдельно по каждому ЖК.</p>
+<div class="code-block">Возьмите из справочника:<br /> &bull; Группа источника<br /> &bull; Название источника (уже существующее)<br /> &bull; ЖК (один конкретный, либо &laquo;Все ЖК&raquo;, но осторожно)<br /> &bull; Номер телефона / SIP (если используется новый номер для этой активности)<br /> После подачи задачи активность фиксируется в &laquo;Справочнике активностей&raquo;.</div>
+<p><strong>Важно:</strong> Все запущенные рекламные активности по ЖК аккумулируются в справочнике активностей &mdash; это единый источник правды для аналитики. Без регистрации активности система может не связать лид с конкретной кампанией внутри одного источника.</p>
+<div class="info-note">📌 Пример: в справочнике уже есть источник &laquo;Яндекс Директ&raquo;. Вы запускаете новую кампанию для ЖК &laquo;Долина&raquo;. Подаёте активность: источник Яндекс Директ, ЖК Долина, номер телефона или SIP. После этого все лиды по этой связке увидят правильную привязку.</div>
+</div>
+<!-- 8. Отчетность, синхронизация, медиапланы (из брошюры) -->
+<div id="reports" class="section-card">
+<div class="section-title">📊 Отчётность, синхронизация и медиапланы</div>
+<p><strong>Битрикс24 &mdash; центральная база данных</strong>, куда стекаются данные из Mango-телефонии, виртуальной АТС, колл-центра, рекламных систем, отдела продаж. Справочники синхронизируются с Б24 <strong>каждые 30 минут</strong>.</p>
+<div class="grid-2">
+<div><strong>📈 Медиапланы &mdash; важная часть отчётов</strong><br /> В них фиксируются:<br /> - планируемые и фактические расходы по источникам<br /> - планируемый и полученный объём лидов<br /> - перечень источников продвижения по каждому ЖК<br /> <a class="btn-outline" href="https://bx.sskuban.ru/company/personal/user/41643/tasks/task/view/107373/" target="_blank">📌 Задача&nbsp;заполнения&nbsp;медиапланов</a></div>
+<div><strong>📉 Отчёты в Qlik и Smartis</strong><br /> 🔹 <a href="https://qlik.sskuban.ru/sense/app/64f1f7ce-185d-4ee9-a91f-123891172ee6/sheet/925ef4de-3733-454e-9bfd-9da0931e9260/state/analysis" target="_blank">Воронка продаж</a><br /> 🔹 <a href="https://qlik.sskuban.ru/sense/app/8213ecd1-a4d8-4cfe-9655-01c51be27b8b/sheet/925ef4de-3733-454e-9bfd-9da0931e9260/state/analysis" target="_blank">План продаж</a><br /> 🔹 <a href="https://qlik.sskuban.ru/sense/app/719999e8-ca7d-4826-b37c-6ca4bb698241/sheet/e02a2e21-6789-4ee7-9639-f6133979e4f5/state/analysis" target="_blank">Источники</a><br /> <em>Ответственный по отчётам: Эдуард Егоров</em></div>
+</div>
+<div class="alert">🧠 <strong>Свод правил:</strong> все изменения в любой части системы (новый источник, активность, телефон, медиаплан) выполняются только через соответствующие задачи в Битрикс24. Это гарантирует актуальность сквозной аналитики.</div>
+</div>
+<!-- 9. Справочники и ссылки (единый блок) -->
+<div class="section-card">
+<div class="section-title">🗂️ Единые справочники ГК ССК</div>
+<p><a class="btn-outline" href="https://docs.google.com/spreadsheets/d/1Jwl64t_2tgnghzLglqgqSbjNjGceo36Rn1rcbolpZVE/edit?usp=sharing" target="_blank">📂 Справочники - источники, UTM, ЖК, телефоны, активности</a></p>
+<div class="grid-2">
+<div><strong>Перечень листов:</strong>
+<ul style="margin-left: 1rem;">
+<li>Справочник источников (ID Bitrix24, группа)</li>
+<li>Справочник UTM-меток (Source+Medium)</li>
+<li>Справочник ЖК (проекты + UTM метка)</li>
+<li>Справочник номеров и SIP</li>
+<li>Справочник активностей</li>
+</ul>
+</div>
+<div><strong>Шаблоны задач (быстрый доступ):</strong><br /> - <a href="https://bx.sskuban.ru/company/personal/user/41643/tasks/task/view/98949/" target="_blank">Завести/изменить источник или ЖК</a><br /> - <a href="https://bx.sskuban.ru/company/personal/user/41643/tasks/task/view/39011/" target="_blank">Выделить телефон / SIP</a><br /> - <a href="https://bx.sskuban.ru/company/personal/user/41643/tasks/task/view/108583/" target="_blank">Динамический коллтрекинг</a><br /> - <a href="https://bx.sskuban.ru/company/personal/user/41643/tasks/task/view/107373/" target="_blank">Медиаплан</a></div>
+</div>
+<div class="info-note" style="margin-top: 0.5rem;">📍 Помните: УТМ-ссылки для постов и баннеров, QR-коды для офлайна, промокоды, номера коллтрекинга &mdash; всё это звенья одной цепи. Только при комплексной маркировке мы получаем полную картину эффективности каждого канала.</div>
+</div>
+<div class="footer">
+<p>Инструкция на основе брошюры &laquo;Движение данных ССК&raquo; (17 слайдов, 15.04.2026) и внутренних регламентов.<br /> По всем вопросам маркировки и регистрации &mdash; обращаться к аналитику ССК в Битрикс24.</p>
+</div>
+</div>
+</body>
+</html>
