@@ -217,9 +217,48 @@
             font-weight: 500;
             margin-right: 0.5rem;
         }
+        .top-menu {
+        margin: 0 0 20px 0;
+        padding: 10px 0;
+        border-bottom: 1px solid #ddd;
+        font-family: inherit;
+    }
+    .top-menu ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        gap: 25px;
+    }
+    .top-menu li {
+        margin: 0;
+    }
+    .top-menu a {
+        text-decoration: none;
+        color: #0066cc;
+        font-size: 1rem;
+        padding: 5px 0;
+        display: inline-block;
+    }
+    .top-menu a:hover {
+        text-decoration: underline;
+        color: #004499;
+    }
+    .top-menu a.active {
+        font-weight: bold;
+        color: #000;
+        text-decoration: none;
+        border-bottom: 2px solid #0066cc;
+    }
     </style>
 </head>
 <body>
+    <div class="top-menu">
+    <ul>
+        <li><a href="/sskmp/" class="active">Инструкция МП</a></li>
+        <li><a href="/sskmp/sources.html">Разметка источников</a></li>
+    </ul>
+</div>
 <div class="container">
 <div class="hero">
 <h1>📊 Медиапланы ССК</h1>
