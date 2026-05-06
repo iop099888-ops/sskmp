@@ -6,6 +6,7 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate,
     PhpOffice\PhpSpreadsheet\Style\Alignment,
     PhpOffice\PhpSpreadsheet\Style\Border;
+
 // --- 1 КОНФИГУРАЦИЯ ---
 const NC_BASE_URL = 'https://cloud.sskuban.ru/remote.php/dav/files/egorov.ee/';
 const NC_USERNAME = 'egorov.ee';
