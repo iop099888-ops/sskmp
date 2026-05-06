@@ -11,7 +11,7 @@ use PhpOffice\PhpSpreadsheet\Cell\Coordinate,
 const NC_BASE_URL = 'https://cloud.sskuban.ru/remote.php/dav/files/egorov.ee/';
 const NC_USERNAME = 'egorov.ee';
 const NC_PASSWORD = 'Az07031984';
-const SHARE_URL = 'https://cloud.sskuban.ru/s/JRqdp5gyykssLtD';
+const SHARE_URL = 'https://cloud.sskuban.ru/s/JRqdp5gyykssLtD?path=%2F1.%20Инструкции%2FШаблоны%20МП%20для%20нового%20ЖК';
 const SHARE_PASSWORD = 'JRqdp5gyykssLtD';
 const SOURCE_FILE = 'Ежемесячный и квартальный Шаблон МП Q2.xlsx';
 const TARGET_SHEET_NAME = 'Справочник Источники';
