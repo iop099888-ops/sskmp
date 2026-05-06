@@ -2,606 +2,589 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>SSK | Маркировка рекламы</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>ССК МП | Обновление шаблонов из Nextcloud</title>
+    <!-- Библиотека SheetJS (XLSX) для работы с Excel-файлами -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-* {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
 
         body {
-            background: #f0f4f9;
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-            line-height: 1.45;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #f4f7fc;
             color: #1e2a3e;
-            padding: 2rem 1.5rem;
+            line-height: 1.5;
         }
 
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-        }
-
-        /* header */
-        .hero {
-            background: linear-gradient(135deg, #0b2b3b 0%, #1a4a5f 100%);
+        /* Меню сайта (по образцу основного ресурса) */
+        .site-header {
+            background: #0a2b3e;
             color: white;
-            border-radius: 2rem;
-            padding: 2rem 2rem 2rem 2rem;
-            margin-bottom: 2.5rem;
-            box-shadow: 0 12px 25px -10px rgba(0,0,0,0.2);
+            padding: 0.75rem 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-        .hero h1 {
-            font-size: 2.4rem;
-            font-weight: 700;
-            letter-spacing: -0.01em;
-            margin-bottom: 0.5rem;
-        }
-        .hero p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            max-width: 80%;
-        }
-        .badge-cloud {
-            display: inline-block;
-            background: rgba(255,255,255,0.2);
-            backdrop-filter: blur(4px);
-            border-radius: 40px;
-            padding: 0.3rem 1rem;
-            font-size: 0.85rem;
-            margin-top: 1rem;
-            font-weight: 500;
-        }
-
-        /* cards grid */
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        .nav-menu {
+            display: flex;
+            flex-wrap: wrap;
             gap: 1.8rem;
-            margin-bottom: 2.5rem;
+            list-style: none;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        .nav-menu li a {
+            color: #f0f9ff;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: 0.2s;
+            padding: 0.3rem 0;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-menu li a:hover {
+            border-bottom-color: #ffb347;
+            color: #ffb347;
+        }
+        .logo-area {
+            font-weight: 700;
+            font-size: 1.3rem;
+            letter-spacing: 1px;
+            margin-right: 2rem;
+            color: #ffb347;
+        }
+        .container {
+            max-width: 1300px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
         }
         .card {
             background: white;
-            border-radius: 1.5rem;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-            padding: 1.6rem 1.8rem;
-            transition: transform 0.1s ease, box-shadow 0.2s;
-            border: 1px solid #e9eef3;
+            border-radius: 24px;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+            padding: 1.8rem 2rem;
+            margin-bottom: 2rem;
+            transition: 0.2s;
         }
-        .card:hover {
-            box-shadow: 0 20px 30px -12px rgba(0,0,0,0.1);
-            transform: translateY(-2px);
-        }
-        .card-icon {
-            font-size: 2.2rem;
-            margin-bottom: 1rem;
-        }
-        .card h3 {
+        h2 {
             font-size: 1.6rem;
+            margin-bottom: 1rem;
             font-weight: 600;
-            margin-bottom: 0.75rem;
-            color: #0f3b4c;
-            border-left: 4px solid #2c7a6e;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #0f3b4f;
+        }
+        h3 {
+            font-size: 1.2rem;
+            margin: 1.2rem 0 0.8rem 0;
+            color: #1e4663;
+            border-left: 4px solid #ffb347;
             padding-left: 0.75rem;
         }
-        .card .sub {
-            color: #4b6a7c;
-            font-weight: 500;
-            margin-bottom: 1rem;
+        .form-group {
+            margin-bottom: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+        label {
+            font-weight: 600;
+            color: #1f3b4c;
             font-size: 0.9rem;
         }
-        .card ul, .card p {
-            color: #2c3e4e;
-            margin: 0.75rem 0;
-            padding-left: 0.2rem;
+        input, button {
+            padding: 0.7rem 1rem;
+            border-radius: 14px;
+            border: 1px solid #ccdbe5;
+            font-size: 0.95rem;
+            transition: 0.2s;
+            font-family: inherit;
         }
-        .card li {
-            margin-left: 1.2rem;
-            margin-bottom: 0.5rem;
+        input:focus {
+            outline: none;
+            border-color: #ff9f3d;
+            box-shadow: 0 0 0 3px rgba(255, 179, 71, 0.2);
+        }
+        button {
+            background: #0f3b4f;
+            color: white;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        button:hover {
+            background: #ff8c1a;
+            transform: translateY(-1px);
+        }
+        button:active {
+            transform: translateY(1px);
+        }
+        .btn-primary {
+            background: #ff8c1a;
+            color: #1e2a3e;
+            font-size: 1rem;
+            padding: 0.8rem 1.5rem;
+            margin-top: 0.5rem;
+        }
+        .btn-primary:hover {
+            background: #e67600;
+            color: white;
+        }
+        .file-input {
+            background: #f8fafc;
+            border: 1px dashed #94a3b8;
+            cursor: pointer;
+        }
+        .status-area {
+            background: #f1f5f9;
+            border-radius: 20px;
+            padding: 1rem 1.4rem;
+            margin: 1rem 0;
+            font-family: monospace;
+            font-size: 0.9rem;
+            border-left: 5px solid #ffb347;
+            max-height: 280px;
+            overflow-y: auto;
+        }
+        .log-line {
+            padding: 0.2rem 0;
+            border-bottom: 1px solid #e2e8f0;
+            font-family: 'SF Mono', monospace;
+        }
+        .log-success {
+            color: #1e7b3e;
+        }
+        .log-error {
+            color: #c7254e;
+            font-weight: 500;
+        }
+        .log-info {
+            color: #2c6e9e;
+        }
+        .flex-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.2rem;
+            align-items: flex-end;
+        }
+        .note {
+            background: #eef2ff;
+            padding: 0.8rem 1.2rem;
+            border-radius: 18px;
+            font-size: 0.8rem;
+            color: #2c3e66;
+            margin-top: 1rem;
         }
         hr {
             margin: 1rem 0;
             border: none;
             height: 1px;
-            background: #e2e8f0;
+            background: linear-gradient(to right, #cbd5e1, transparent);
         }
-
-        /* info blocks */
-        .info-block {
-            background: #eef2fa;
-            border-radius: 1.2rem;
-            padding: 1.5rem 2rem;
-            margin-bottom: 2rem;
-            border-left: 6px solid #2c7a6e;
+        .badge {
+            background: #ffb34720;
+            border-radius: 40px;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #a66300;
         }
-        .warning-block {
-            background: #fff6e5;
-            border-left-color: #e67e22;
-        }
-        .danger-block {
-            background: #fee9e6;
-            border-left-color: #c0392b;
-        }
-        .responsibility-block {
-            background: linear-gradient(120deg, #eef6f9 0%, #ffffff 100%);
-            border-left-color: #1e6f5c;
-            margin-bottom: 2rem;
-        }
-        .link-list {
-            background: white;
-            border-radius: 1.2rem;
-            padding: 1.5rem;
-            margin-top: 1rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-        }
-        .btn-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: #1e4663;
-            color: white;
-            padding: 0.6rem 1.2rem;
-            border-radius: 2rem;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.9rem;
-            transition: background 0.2s;
-            margin-right: 0.8rem;
-            margin-bottom: 0.6rem;
-        }
-        .btn-link:hover {
-            background: #0f2f46;
-        }
-        .btn-outline {
-            background: transparent;
-            border: 1px solid #2c7a6e;
-            color: #1e4a5f;
-        }
-        .btn-outline:hover {
-            background: #e0f0ee;
-        }
-
-        .source-table-demo {
-            background: #f8fafc;
-            border-radius: 1rem;
-            padding: 0.8rem;
-            font-family: monospace;
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: #5b6e8c;
             font-size: 0.8rem;
-            overflow-x: auto;
-            margin: 1rem 0;
-            border: 1px solid #dce5ef;
-        }
-
-        .grid-2col {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.2rem;
+            border-top: 1px solid #dce5ec;
+            margin-top: 1rem;
         }
         @media (max-width: 680px) {
-            .grid-2col { grid-template-columns: 1fr; }
-            .hero h1 { font-size: 1.8rem; }
-            .hero p { max-width: 100%; }
-            body { padding: 1rem; }
-        }
-
-        footer {
-            margin-top: 3rem;
-            text-align: center;
-            font-size: 0.8rem;
-            color: #5f7f95;
-            border-top: 1px solid #cbdde9;
-            padding-top: 2rem;
-        }
-        .mock-img {
-            background: #eef2f5;
-            border-radius: 0.8rem;
-            padding: 0.8rem;
-            text-align: center;
-            font-size: 0.8rem;
-            color: #2c6280;
-            border: 1px dashed #b9cfdf;
-            margin: 0.8rem 0;
-        }
-        .mock-img span {
-            font-weight: 500;
-        }
-        .role-badge {
-            display: inline-block;
-            background: #1e4663;
-            color: white;
-            border-radius: 2rem;
-            padding: 0.2rem 0.7rem;
-            font-size: 0.7rem;
-            font-weight: 500;
-            margin-right: 0.5rem;
-        }
-        .top-menu {
-        margin: 0 0 20px 0;
-        padding: 10px 0;
-        border-bottom: 1px solid #ddd;
-        font-family: inherit;
-    }
-    .top-menu ul {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        gap: 25px;
-    }
-    .top-menu li {
-        margin: 0;
-    }
-    .top-menu a {
-        text-decoration: none;
-        color: #0066cc;
-        font-size: 1rem;
-        padding: 5px 0;
-        display: inline-block;
-    }
-    .top-menu a:hover {
-        text-decoration: underline;
-        color: #004499;
-    }
-    .top-menu a.active {
-        font-weight: bold;
-        color: #000;
-        text-decoration: none;
-        border-bottom: 2px solid #0066cc;
-    }
-
-        body {
-            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
-            background: #f5f9ff;
-            color: #1a2c3e;
-            line-height: 1.45;
-            scroll-behavior: smooth;
-        }
-
-        .wrapper {
-            max-width: 1300px;
-            margin: 0 auto;
-            padding: 2rem 1.5rem;
-        }
-
-        .site-header {
-            margin-bottom: 2rem;
-            border-bottom: 2px solid #e0edf5;
-            padding-bottom: 1.2rem;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: flex-end;
-            gap: 1rem;
-        }
-        .logo-area h1 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #0b4b6e, #1f7ca8);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            letter-spacing: -0.3px;
-        }
-        .logo-area p {
-            font-size: 0.85rem;
-            color: #4a6f8c;
-            margin-top: 0.2rem;
-        }
-        .badge-version {
-            background: #eef2fa;
-            padding: 0.3rem 1rem;
-            border-radius: 40px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: #1a5d7c;
-            border: 1px solid #cde0ef;
-        }
-
-        .quick-nav {
-            background: white;
-            border-radius: 2rem;
-            padding: 0.5rem 1rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.03);
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.6rem;
-            border: 1px solid #e2edf7;
-        }
-        .quick-nav a {
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: #2c6688;
-            padding: 0.4rem 0.9rem;
-            border-radius: 2rem;
-            transition: 0.2s;
-        }
-        .quick-nav a:hover {
-            background: #e5f0fa;
-            color: #0a4b6e;
-        }
-
-        .section-card {
-            background: #ffffff;
-            border-radius: 28px;
-            box-shadow: 0 6px 14px rgba(0,0,0,0.02), 0 2px 6px rgba(0,0,0,0.03);
-            margin-bottom: 2rem;
-            padding: 1.8rem 2rem;
-            border: 1px solid #eef2f8;
-            transition: all 0.2s;
-        }
-        .section-title {
-            font-size: 1.6rem;
-            font-weight: 650;
-            margin-bottom: 1rem;
-            color: #0a3650;
-            border-left: 5px solid #2c9bc8;
-            padding-left: 1rem;
-        }
-        .subsection-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin: 1.2rem 0 0.7rem 0;
-            color: #1f6f9b;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        hr {
-            margin: 1rem 0;
-            border: 0;
-            height: 1px;
-            background: #e4edf5;
-        }
-        .grid-2 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.2rem;
-            margin: 1rem 0;
-        }
-        .method-card {
-            background: #fafdff;
-            border-radius: 20px;
-            padding: 1rem 1.2rem;
-            border: 1px solid #e2eff9;
-        }
-        .code-block {
-            background: #f0f5fa;
-            padding: 1rem 1.2rem;
-            border-radius: 18px;
-            font-family: 'SF Mono', 'Fira Code', monospace;
-            font-size: 0.85rem;
-            overflow-x: auto;
-            white-space: pre-wrap;
-            word-break: break-word;
-            color: #1c4f72;
-            border: 1px solid #d6e4f0;
-            margin: 1rem 0;
-        }
-        .alert {
-            background: #fff8e6;
-            border-left: 4px solid #f0b342;
-            padding: 0.9rem 1.2rem;
-            border-radius: 16px;
-            margin: 1rem 0;
-        }
-        .info-note {
-            background: #eef5fc;
-            border-left: 4px solid #2c9bc8;
-            padding: 0.9rem 1.2rem;
-            border-radius: 16px;
-            margin: 1rem 0;
-        }
-        .btn-outline {
-            display: inline-block;
-            background: white;
-            border: 1px solid #c2daef;
-            padding: 0.45rem 1.2rem;
-            border-radius: 40px;
-            text-decoration: none;
-            font-weight: 500;
-            color: #1f7198;
-            transition: 0.2s;
-            margin-top: 0.3rem;
-            font-size: 0.85rem;
-        }
-        .btn-outline:hover {
-            background: #eef3fc;
-            border-color: #8fb9d8;
-        }
-        .footer {
-            margin-top: 2.5rem;
-            text-align: center;
-            font-size: 0.8rem;
-            color: #6b89a3;
-            border-top: 1px solid #e0ecf5;
-            padding-top: 2rem;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1rem 0;
-            font-size: 0.9rem;
-        }
-        th, td {
-            text-align: left;
-            padding: 0.7rem 0.5rem;
-            border-bottom: 1px solid #e9f0f6;
-            vertical-align: top;
-        }
-        th {
-            background: #f7fafd;
-            font-weight: 600;
-            color: #1b5b7e;
-        }
-        .mark {
-            background: #fff0cf;
-            padding: 0.1rem 0.3rem;
-            border-radius: 8px;
-            font-weight: 500;
-            color: #b36200;
-        }
-        @media (max-width: 700px) {
-            .wrapper {
-                padding: 1rem;
-            }
-            .section-card {
-                padding: 1.2rem;
-            }
+            .container { padding: 0 1rem; }
+            .card { padding: 1.2rem; }
+            .nav-menu { gap: 1rem; }
+            .logo-area { font-size: 1rem; margin-right: 0.5rem; }
         }
     </style>
 </head>
 <body>
-<div class="container">
-<div class="top-menu">
-<ul>
-<li><a href="../sskmp/">Инструкция по МП</a></li>
-<li><a class="active" href="../sskmp/sources.html">Разметка источников</a></li>
-</ul>
-</div>
-<div class="hero">
-<h1>🏷️&nbsp;Маркировка рекламы</h1>
-<p><strong>Движение данных, сквозная аналитика. <br /></strong>UTM, коллтрекинг, QR коды, справочники, телефонные номера</p>
-</div>
-<!-- 1. Базовая схема (из брошюры) -->
-<div id="howitworks" class="section-card">
-<div class="section-title">🔄 Как отслеживаются рекламные источники у нас</div>
-<p>В компании все рекламные каналы (контекст, соцсети, радио, наружка, сайты) фиксируются в <strong>едином&nbsp;справочнике</strong>. Каждому источнику присваиваются цифровые метки: UTM Source/Medium, телефон/SIP, а каждому ЖК &mdash; своя метка UTM в Campaign/Content. Это позволяет автоматически связывать лиды, звонки с конкретным источником и ЖК в Битрикс24.</p>
-<div class="info-note">🧩 <strong>Синхронизация справочников с Б24</strong> &mdash; автоматическая, каждые 30 минут. Все данные из телефонии Mango, виртуальной АТС, колл-центра, рекламных систем поступают в единую базу &mdash;&nbsp;Б24.</div>
-<div class="grid-2">
-<div class="method-card">📌 <strong>Перечень источников</strong> &mdash; в справочнике источников (более 20+ типов: контекст, таргет, радио, ТВ, билборды и пр.)</div>
-<div class="method-card">🏢 <strong>Перечень ЖК</strong> &mdash; в справочнике ЖК, каждому проекту присвоена уникальная UTM-метка (dolina, vklyuchi, ...)</div>
-</div>
-<p><strong>Главное правило:</strong> в любой ссылке, рекламной кампании одновременно используются <span class="mark">UTM Источника + UTM ЖК</span>. Без регистрации источника &mdash; лид не определится.</p>
-</div>
-<!-- 2. Способы отслеживания (UTM, телефон, комбинации) -->
-<div id="methods" class="section-card">
-<div class="section-title">📡 Способы отслеживания&nbsp;и комбинации</div>
-<p>В зависимости от канала используются разные варианты идентификации. Все комбинации поддерживаются нашей системой:</p>
-<table>
-<thead>
-<tr>
-<th>Связка меток</th>
-<th>Пример использования</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>UTM</strong></td>
-<td>Онлайн реклама, посты, рассылки, QR в наружной рекламе, новости, ссылки</td>
-</tr>
-<tr>
-<td><strong>UTM + Телефон</strong></td>
-<td>Онлайн реклама, офлайн реклама с QR, посты, рассылки, ТВ, буклеты</td>
-</tr>
-<tr>
-<td><strong>Телефон, SIP</strong></td>
-<td>Радио, наружная реклама, мероприятия (Где нет возможности указать QR)</td>
-</tr>
-<tr>
-<td><strong>UTM + SIP</strong></td>
-<td>Агрегаторы, порталы, классифайды (Метки с динамическим SIP-номером)</td>
-</tr>
-<tr>
-<td><strong>Прямая интеграция с Б24</strong></td>
-<td>Партнёрские системы, виджеты на сайтах, боты, бот-агенты</td>
-</tr>
-<tr>
-<td><strong>Промокоды или ручное указание</strong></td>
-<td>Офлайн, радио, ТВ и другие (КЦ вносит источник и ЖК вручную)</td>
-</tr>
-</tbody>
-</table>
-<div class="alert">🚨 <strong>Важно:</strong> у каждого источника должен быть как минимум один идентификатор: UTM, телефон, SIP или прямая интеграция. Дублирование UTM или номера между разными источниками запрещено &mdash; приведёт к смешению данных.</div>
-</div>
-<!-- 3. UTM-метки: подробно + примеры из брошюры -->
-<div id="utm" class="section-card">
-<div class="section-title">🏷️ UTM-метки: стандарты и примеры</div>
-<p><strong>UTM Source и Medium источника</strong> берутся из <em>Справочника UTM</em> (например, avito, yandex_direct, 2gismedia, vk_video). <br /><strong>Метка ЖК</strong> для utm_campaign / utm_content &mdash; из <em>Справочника ЖК</em> (dolina, vklyuchi, ...).</p>
-<div class="subsection-title">✅ Корректные примеры</div>
-<div class="code-block"><strong>Пример 1 (Avito):</strong><br /> utm_source=<span class="mark">avito</span>&amp;utm_medium=cpc&amp;utm_campaign=sale2026&amp;utm_content=<span class="mark">dolina</span><br /><br /> <strong>Пример 2 (Яндекс Директ с подстановками):</strong><br /> utm_source=<span class="mark">yandex_direct</span>&amp;utm_medium=cpc&amp;utm_campaign={campaign_name}|{campaign_id}|{source_type}&amp;utm_content=<span class="mark">dolina</span>|{gbid}|{ad_id}|{phrase_id}|{source}|{device_type}|{banner_id}|{campaign_type}&amp;utm_term={keyword}<br /><br /> <strong>Пример 3 (2Гис):</strong><br /> utm_source=<span class="mark">2gismedia</span>&amp;utm_medium=cpc&amp;utm_campaign=ssk4152|<span class="mark">dolina</span>|sale2026</div>
-<p><strong>Пробелы в UTM запрещено использовать - это приведет к ошибке, можно нижнее подчеркивание.</strong> Перед созданием ссылки проверьте уникальность связки utm_source + utm_campaign (с меткой ЖК) в справочнике UTM. Если метки нет в справочнике &mdash; заведите новый источник или укажите UTM к имеющемуся через задачу (см. раздел &laquo;Регистрация&raquo;👇🏻).</p>
-</div>
-<!-- 4. QR-коды для офлайн-рекламы (новый раздел) -->
-<div id="qr" class="section-card">
-<div class="section-title">📲 QR-коды: мост между офлайн и онлайн-отслеживанием</div>
-<p>QR-коды на печатной продукции, билбордах, листовках, в журналах &mdash; эффективный способ маркировки офлайн-источников. Принцип: QR ведёт на лендинг или сайт с <strong>предустановленными UTM-метками</strong>, которые регистрируются в справочнике.</p>
-<div class="grid-2">
-<div class="method-card">🔹 <strong>Как использовать:</strong><br /> - Зарегистрируйте источник (например, &laquo;Журнал Интерьер&raquo;, &laquo;Билборд на Ленина&raquo;).<br /> - Сформируйте короткую ссылку вида: <code>site.ru/zhk?utm_source=magazine_interior&amp;utm_medium=qr&amp;utm_campaign=may2026&amp;utm_content=dolina</code>.<br /> - Сгенерируйте QR-код через любой генератор.<br /> - Разместите на носителе.</div>
-<div class="method-card">🔸 <strong>Важные правила:</strong><br /> - UTM-метка источника должна быть уникальной и внесена в справочник UTM.<br /> - Каждый QR-код для разных кампаний/носителей &mdash; отдельный источник.<br /> - Отслеживайте переходы в Б24 и аналитических отчётах (Qlik).</div>
-</div>
-<div class="info-note">📌 <strong>Пример QR-кампании:</strong> реклама ЖК &laquo;Долина&raquo; в газете &laquo;Вечерний город&raquo;. Регистрируем источник &laquo;Газета Вечерний город&raquo;, UTM: utm_source=gazeta_vecherniy&amp;utm_medium=qr&amp;utm_campaign=summer2026&amp;utm_content=dolina. QR-код на страницу с формой заявки. Система идентифицирует все заявки с этого QR как пришедшие из газеты.</div>
-</div>
-<!-- 5. Телефоны, коллтрекинг, SIP (из брошюры задачи) -->
-<div id="phones" class="section-card">
-<div class="section-title">📞 Отслеживание по телефонным номерам, SIP и динамический коллтрекинг</div>
-<p><strong>Справочник номеров и SIP активностей</strong> содержит все телефоны, используемые в рекламе. Каждый номер или SIP-аккаунт жёстко привязывается к источнику и ЖК. Звонок на такой номер автоматически определяет канал.</p>
-<div class="grid-2">
-<div>
-<ul style="margin-left: 1.2rem;">
-<li>✔ Выделение новых номеров, SIP &rarr; <a href="https://bx.sskuban.ru/company/personal/user/41643/tasks/task/view/39011/" target="_blank">задача на телефоны/SIP</a></li>
-<li>✔ Динамический коллтрекинг для сайтов &rarr; <a href="https://bx.sskuban.ru/company/personal/user/41643/tasks/task/view/108583/" target="_blank">задача на коллтрекинг</a></li>
-<li>✔ Регистрация источника и привязка номера &rarr; <a href="https://bx.sskuban.ru/company/personal/user/41643/tasks/task/view/98949/" target="_blank">задача по источникам и ЖК</a></li>
-</ul>
-</div>
-<div class="method-card"><strong>Пример: радио Реклама</strong><br /> Запрашиваем новый номер телефона через задачу. После регистрации в справочнике номер привязывается к радио-источнику. Звонки на этот номер в Б24 упадут с правильной меткой.</div>
-</div>
-<div class="alert">🔔 Номер телефона или SIP могут использоваться как самостоятельный идентификатор (если UTM нет). Главное &mdash; уникальность номера для одного источника.</div>
-</div>
-<!-- 6. Регистрация нового источника (полный шаблон из брошюры) -->
-<div id="registry" class="section-card">
-<div class="section-title">📝 Регистрация нового источника (которого нет в справочнике)</div>
-<p><strong>Подайте данные через задачу Б24:</strong> <a class="btn-outline" href="https://bx.sskuban.ru/company/personal/user/41643/tasks/task/view/98949/" target="_blank">🔗 Задача&nbsp;по учёту источников</a></p>
-<div class="info-note"><strong>Структура заявки:</strong><br /> 1️⃣ <strong>Группа источника</strong> (из перечня: контекстная реклама, радио, SMM, офлайн-мероприятие и др.)<br /> 2️⃣ <strong>Новое название источника</strong> (уникальное, понятное)<br /> 3️⃣ <strong>UTM Source и Medium</strong> (если есть) &mdash; уникальные<br /> 4️⃣ <strong>Номер телефона / SIP</strong> (если выделен)<br /> 5️⃣ <strong>По какому ЖК</strong> (конкретный или &laquo;Все ЖК&raquo;)<br /> 6️⃣ <strong>Прямая интеграция с Б24</strong> (если есть, указать детали)<br /> <span class="mark">Важно:</span> Если выбираете &laquo;Все ЖК&raquo;, данные не привяжутся к конкретному ЖК и попадут в категорию &laquo;Не определено&raquo;.</div>
-<p><strong>Дополнительные правила:</strong> перед подачей проверьте, что UTM и телефон отсутствуют в существующих справочниках (нет дублей). После регистрации источник появится в справочнике и синхронизируется с Б24.</p>
-</div>
-<!-- 7. Регистрация активности (когда источник уже есть, а запускаем рекламу по ЖК) -->
-<div id="activity" class="section-card">
-<div class="section-title">⚙️ Регистрация активности в источнике (запуск рекламы ЖК)</div>
-<p>Если источник уже был заведён в справочнике, но вы запускаете новую кампанию для конкретного ЖК, необходимо зарегистрировать <strong>активность</strong>. Данные подаются отдельно по каждому ЖК.</p>
-<div class="code-block">Возьмите из справочника:<br /> &bull; Группа источника<br /> &bull; Название источника (уже существующее)<br /> &bull; ЖК (один конкретный, либо &laquo;Все ЖК&raquo;, но осторожно)<br /> &bull; Номер телефона / SIP (если используется новый номер для этой активности)<br /> После подачи задачи активность фиксируется в &laquo;Справочнике активностей&raquo;.</div>
-<p><strong>Важно:</strong> Все запущенные рекламные активности по ЖК аккумулируются в справочнике активностей &mdash; это единый источник правды для аналитики. Без регистрации активности система может не связать лид с конкретной кампанией внутри одного источника.</p>
-<div class="info-note">📌 Пример: в справочнике уже есть источник &laquo;Яндекс Директ&raquo;. Вы запускаете новую кампанию для ЖК &laquo;Долина&raquo;. Подаёте активность: источник Яндекс Директ, ЖК Долина, номер телефона или SIP. После этого все лиды по этой связке увидят правильную привязку.</div>
-</div>
-<!-- 8. Отчетность, синхронизация, медиапланы (из брошюры) -->
-<div id="reports" class="section-card">
-<div class="section-title">📊 Отчётность, синхронизация и медиапланы</div>
-<p><strong>Битрикс24 &mdash; центральная база данных</strong>, куда стекаются данные из Mango-телефонии, виртуальной АТС, колл-центра, рекламных систем, отдела продаж. Справочники синхронизируются с Б24 <strong>каждые 30 минут</strong>.</p>
-<div class="grid-2">
-<div><strong>📈 Медиапланы &mdash; важная часть отчётов</strong><br /> В них фиксируются:<br /> - планируемые и фактические расходы по источникам<br /> - планируемый объём лидов и CPL<br /> - перечень источников продвижения по каждому ЖК<br /> <a class="btn-outline" href="https://bx.sskuban.ru/company/personal/user/41643/tasks/task/view/107373/" target="_blank">📌 Задача&nbsp;заполнение&nbsp;медиапланов</a></div>
-<div><strong>📉 Отчёты в Qlik и Smartis</strong><br /> 🔹 <a href="https://qlik.sskuban.ru/sense/app/64f1f7ce-185d-4ee9-a91f-123891172ee6/sheet/925ef4de-3733-454e-9bfd-9da0931e9260/state/analysis" target="_blank">Воронка продаж</a><br /> 🔹 <a href="https://qlik.sskuban.ru/sense/app/8213ecd1-a4d8-4cfe-9655-01c51be27b8b/sheet/925ef4de-3733-454e-9bfd-9da0931e9260/state/analysis" target="_blank">План продаж</a><br /> 🔹 <a href="https://qlik.sskuban.ru/sense/app/719999e8-ca7d-4826-b37c-6ca4bb698241/sheet/e02a2e21-6789-4ee7-9639-f6133979e4f5/state/analysis" target="_blank">Источники</a><br /> <em>Ответственный по отчётам: Эдуард Егоров</em></div>
-</div>
-<div class="alert">🧠 <strong>Свод правил:</strong> все изменения в любой части системы (новый источник, активность, телефон, медиаплан) выполняются только через соответствующие шаблоны документов и задачи в Битрикс24. Это гарантирует актуальность сквозной аналитики.</div>
-</div>
-<!-- 9. Справочники и ссылки (единый блок) -->
-<div class="section-card">
-<div class="section-title">🗂️ Единый справочник</div>
-<p><a class="btn-outline" href="https://docs.google.com/spreadsheets/d/1Jwl64t_2tgnghzLglqgqSbjNjGceo36Rn1rcbolpZVE/edit?usp=sharing" target="_blank">📂 Справочник: источники, UTM, ЖК, телефоны, активности</a></p>
-<div class="grid-2">
-<div><strong>Перечень листов внутри:</strong>
-<ul style="margin-left: 1rem;">
-<li>Справочник источников (ID Bitrix24, группа)</li>
-<li>Справочник UTM-меток (Source+Medium)</li>
-<li>Справочник ЖК (проекты + UTM метка)</li>
-<li>Справочник номеров и SIP</li>
-<li>Справочник активностей</li>
-</ul>
-</div>
-<div><strong>Ссылки задач (быстрый доступ):</strong><br /> - <a href="https://bx.sskuban.ru/company/personal/user/41643/tasks/task/view/98949/" target="_blank">Завести/изменить источник, добавить ЖК</a><br /> - <a href="https://bx.sskuban.ru/company/personal/user/41643/tasks/task/view/39011/" target="_blank">Выделить телефон или SIP</a><br /> - <a href="https://bx.sskuban.ru/company/personal/user/41643/tasks/task/view/108583/" target="_blank">Динамический коллтрекинг</a><br /> - <a href="https://bx.sskuban.ru/company/personal/user/41643/tasks/task/view/107373/" target="_blank">Медиапланы</a></div>
-</div>
-<div class="info-note" style="margin-top: 0.5rem;">📍 Помните: УТМ-ссылки для постов и баннеров, QR-коды для офлайна, промокоды, номера коллтрекинга &mdash; всё это звенья одной цепи. Только при комплексной маркировке мы получаем полную картину эффективности каждого канала.</div>
-</div>
-<div class="footer">
-<p>Инструкция на основе брошюры Егорова Э. &laquo;Движение данных&raquo; (17 слайдов, 15.04.2026) и внутренних регламентов.<br /> По всем вопросам маркировки и регистрации &mdash; обращаться к аналитику  в Битрикс24.</p>
-</div>
-</div>
+    <header class="site-header">
+        <ul class="nav-menu">
+            <li class="logo-area🏠">🏢 ССК МОЛЛ ПРОЕКТ</li>
+            <li><a href="#">Главная</a></li>
+            <li><a href="#">Шаблоны МП</a></li>
+            <li><a href="#">Обновление данных</a></li>
+            <li><a href="#">Инструкции</a></li>
+            <li><a href="#">Поддержка</a></li>
+        </ul>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>📄 Обновление справочника источников в шаблонах МП</h2>
+            <p>Система заменит лист <strong>«Справочник Источники»</strong> в двух файлах: <br>
+            <code>Ежемесячный и квартальный Шаблон МП Q2.xlsx</code> и <code>Еженедельный Шаблон МП Q2.xlsx</code> <br>
+            на данные из загруженного вами XLSX-файла (формат как в примере 221.xlsx).<br>
+            Работает через публичный WebDAV Nextcloud (с доступом по паролю папки).</p>
+            <hr>
+            
+            <h3>🔐 Доступ к Nextcloud (публичная шара)</h3>
+            <div class="form-group">
+                <label>🌐 Ссылка на общую папку (share link)</label>
+                <input type="text" id="shareUrl" value="https://cloud.sskuban.ru/s/JRqdp5gyykssLtD" placeholder="https://cloud.sskuban.ru/s/........">
+                <div class="badge" style="margin-top: 5px;">Из ссылки автоматически берётся токен доступа</div>
+            </div>
+            <div class="form-group">
+                <label>🔑 Пароль папки (установленный для общей ссылки)</label>
+                <input type="password" id="sharePassword" placeholder="Введите пароль от папки JRqdp5gyykssLtD" autocomplete="off">
+                <div class="note">⚠️ Пароль защищает доступ к папке «1. Инструкции» и файлам. Без него редактирование невозможно.</div>
+            </div>
+
+            <h3>📂 Загрузите новый справочник источников (XLSX)</h3>
+            <div class="form-group">
+                <label>📎 Файл с актуальными данными (формат как 221.xlsx)</label>
+                <input type="file" id="sourceFile" accept=".xlsx, .xls, .xlsm" class="file-input">
+                <div class="badge">Лист «Справочник Источники» (или первый лист) заменит данные в шаблонах</div>
+            </div>
+
+            <div class="flex-row">
+                <button id="runUpdateBtn" class="btn-primary">🚀 Запустить обновление шаблонов</button>
+                <button id="testConnectionBtn" style="background: #5f7f9e;">🔌 Проверить доступ к папке</button>
+            </div>
+
+            <h3>📋 Ход выполнения и результат</h3>
+            <div id="logContainer" class="status-area">
+                <div class="log-line log-info">⚡ Готов к работе. Заполните пароль папки и выберите файл справочника.</div>
+                <div class="log-line log-info">📌 Будет заменён лист «Справочник Источники» в двух целевых файлах.</div>
+            </div>
+        </div>
+        <div class="note" style="background:#fef9e6;">
+            💡 <strong>Инструкция:</strong> Для работы требуется пароль от общей папки Nextcloud (выданный отдельно). 
+            Функционал использует WebDAV публичных ресурсов Nextcloud. Обновление происходит напрямую в облаке. 
+            Если возникает ошибка CORS — необходимо, чтобы администратор Nextcloud разрешил CORS-заголовки или используйте 
+            браузерное расширение (в крайнем случае). Стандартные настройки Nextcloud 30 позволяют обращаться к public.php/webdav.
+        </div>
+    </div>
+    <footer>
+        © 2025 ССК Молл Проект — автоматическое обновление справочников через Nextcloud API
+    </footer>
+
+    <script>
+        // ---------- Глобальные элементы ----------
+        const shareUrlInput = document.getElementById('shareUrl');
+        const sharePasswordInput = document.getElementById('sharePassword');
+        const sourceFileInput = document.getElementById('sourceFile');
+        const runBtn = document.getElementById('runUpdateBtn');
+        const testBtn = document.getElementById('testConnectionBtn');
+        const logContainer = document.getElementById('logContainer');
+
+        // Имена целевых файлов и путь внутри папки "1. Инструкции"
+        const TARGET_FILES = [
+            { name: "Ежемесячный и квартальный Шаблон МП Q2.xlsx", path: "/1. Инструкции/Ежемесячный и квартальный Шаблон МП Q2.xlsx" },
+            { name: "Еженедельный Шаблон МП Q2.xlsx", path: "/1. Инструкции/Еженедельный Шаблон МП Q2.xlsx" }
+        ];
+
+        // Вспомогательные функции логирования
+        function addLog(message, type = 'info') {
+            const logDiv = document.createElement('div');
+            logDiv.className = `log-line log-${type}`;
+            const timestamp = new Date().toLocaleTimeString('ru-RU', { hour12: false });
+            logDiv.innerText = `[${timestamp}] ${message}`;
+            logContainer.appendChild(logDiv);
+            logDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function clearLogs(keepInitial = false) {
+            if (!keepInitial) {
+                logContainer.innerHTML = '';
+                addLog('🔄 Новая сессия обновления', 'info');
+            } else {
+                // удаляем только технические, но оставляем системные — по желанию
+                const keepLines = [];
+                for (let child of logContainer.children) {
+                    if (child.innerText.includes('Готов к работе') || child.innerText.includes('заменён лист')) {
+                        keepLines.push(child.cloneNode(true));
+                    }
+                }
+                logContainer.innerHTML = '';
+                if (keepLines.length) keepLines.forEach(l => logContainer.appendChild(l));
+                else addLog('⚡ Готов к обновлению.', 'info');
+            }
+        }
+
+        // Получить токен из share URL (после /s/)
+        function getShareTokenFromUrl(url) {
+            try {
+                const cleanUrl = url.trim();
+                const sIndex = cleanUrl.indexOf('/s/');
+                if (sIndex === -1) return null;
+                let tokenPart = cleanUrl.substring(sIndex + 3);
+                const slashIndex = tokenPart.indexOf('/');
+                if (slashIndex !== -1) tokenPart = tokenPart.substring(0, slashIndex);
+                if (tokenPart.includes('?')) tokenPart = tokenPart.split('?')[0];
+                return tokenPart || null;
+            } catch(e) { return null; }
+        }
+
+        // Базовый URL для WebDAV публичного доступа
+        function getWebDavBaseUrl(domainUrl) {
+            // извлекаем протокол + домен без пути
+            let urlObj;
+            try {
+                urlObj = new URL(domainUrl);
+            } catch(e) {
+                return null;
+            }
+            return `${urlObj.protocol}//${urlObj.host}/public.php/webdav`;
+        }
+
+        // Создание заголовков авторизации (Basic: токен:пароль)
+        function getAuthHeaders(token, password) {
+            const credentials = btoa(`${token}:${password}`);
+            return {
+                'Authorization': `Basic ${credentials}`,
+                'Content-Type': 'application/octet-stream'
+            };
+        }
+
+        // Выполнение запроса через fetch с авторизацией и обработкой ошибок
+        async function webdavRequest(url, method, body = null, headers = {}) {
+            const response = await fetch(url, {
+                method: method,
+                headers: headers,
+                body: body,
+                credentials: 'omit'
+            });
+            if (!response.ok) {
+                let errorText = `HTTP ${response.status}`;
+                if (response.status === 401) errorText = 'Неверный токен/пароль (401) — проверьте пароль папки или токен';
+                else if (response.status === 404) errorText = 'Файл или папка не найдены (404)';
+                else if (response.status === 403) errorText = 'Доступ запрещён (403) — недостаточно прав на запись';
+                else errorText = `${errorText} ${response.statusText}`;
+                throw new Error(errorText);
+            }
+            return response;
+        }
+
+        // Скачать файл как ArrayBuffer
+        async function downloadFile(webdavBase, relativePath, token, password) {
+            const fullUrl = `${webdavBase}${encodeURI(relativePath).replace(/\(/g, '%28').replace(/\)/g, '%29')}`;
+            const headers = getAuthHeaders(token, password);
+            // Убираем Content-Type, тк GET не требует
+            delete headers['Content-Type'];
+            const resp = await webdavRequest(fullUrl, 'GET', null, headers);
+            return await resp.arrayBuffer();
+        }
+
+        // Загрузить файл обратно (PUT)
+        async function uploadFile(webdavBase, relativePath, token, password, fileData, contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+            const fullUrl = `${webdavBase}${encodeURI(relativePath).replace(/\(/g, '%28').replace(/\)/g, '%29')}`;
+            const headers = getAuthHeaders(token, password);
+            headers['Content-Type'] = contentType;
+            const resp = await webdavRequest(fullUrl, 'PUT', fileData, headers);
+            return resp;
+        }
+
+        // Проверить доступ к корню WebDAV (или к папке 1. Инструкции)
+        async function testConnection(webdavBase, token, password) {
+            const testPath = "/1. Инструкции/";  // проверяем наличие папки
+            const fullUrl = `${webdavBase}${encodeURI(testPath)}`;
+            const headers = getAuthHeaders(token, password);
+            delete headers['Content-Type'];
+            try {
+                const response = await fetch(fullUrl, { method: 'PROPFIND', headers, credentials: 'omit' });
+                if (response.status === 207) return true; // WebDAV multistatus успех
+                if (response.ok) return true;
+                throw new Error(`Проверка доступа: ${response.status}`);
+            } catch (err) {
+                console.error('Test connection error', err);
+                return false;
+            }
+        }
+
+        // Замена листа "Справочник Источники" в workbook данными из sourceWorkbook (первый лист или лист с именем "Справочник Источники")
+        function replaceSourcesSheet(targetWorkbook, sourceWorkbook) {
+            // Определяем, какой лист брать из источника: если есть лист "Справочник Источники", берём его, иначе первый лист
+            let sourceSheet = null;
+            const sourceSheetName = "Справочник Источники";
+            if (sourceWorkbook.Sheets[sourceSheetName]) {
+                sourceSheet = sourceWorkbook.Sheets[sourceSheetName];
+            } else {
+                const firstSheetName = sourceWorkbook.SheetNames[0];
+                sourceSheet = sourceWorkbook.Sheets[firstSheetName];
+            }
+            if (!sourceSheet) throw new Error('В загруженном файле не найдено ни одного листа с данными');
+
+            // Создаём новый лист-копию (глубокое копирование)
+            const newSheet = XLSX.utils.book_new();
+            // Простой способ: скопировать диапазон через JSON (гарантия независимости)
+            const sheetJson = XLSX.utils.sheet_to_json(sourceSheet, { header: 1, defval: "" });
+            const copiedSheet = XLSX.utils.aoa_to_sheet(sheetJson);
+            // Копируем ширины колонок? опционально, но не критично
+            if (sourceSheet['!cols']) copiedSheet['!cols'] = JSON.parse(JSON.stringify(sourceSheet['!cols']));
+            if (sourceSheet['!merges']) copiedSheet['!merges'] = JSON.parse(JSON.stringify(sourceSheet['!merges']));
+
+            // Удаляем старый лист если существует
+            const targetSheetName = "Справочник Источники";
+            if (targetWorkbook.Sheets[targetSheetName]) {
+                delete targetWorkbook.Sheets[targetSheetName];
+                const idx = targetWorkbook.SheetNames.indexOf(targetSheetName);
+                if (idx !== -1) targetWorkbook.SheetNames.splice(idx, 1);
+            }
+
+            // Добавляем новый лист
+            targetWorkbook.Sheets[targetSheetName] = copiedSheet;
+            targetWorkbook.SheetNames.push(targetSheetName);
+            return true;
+        }
+
+        // Основная функция обновления
+        async function runUpdate() {
+            // 1. Получить параметры
+            const shareUrl = shareUrlInput.value.trim();
+            const sharePassword = sharePasswordInput.value.trim();
+            const sourceFile = sourceFileInput.files[0];
+
+            if (!shareUrl) {
+                addLog('❌ Укажите ссылку на общую папку Nextcloud', 'error');
+                return;
+            }
+            if (!sharePassword) {
+                addLog('❌ Введите пароль от общей папки (защищённая шара)', 'error');
+                return;
+            }
+            if (!sourceFile) {
+                addLog('❌ Выберите XLSX-файл с новым справочником источников', 'error');
+                return;
+            }
+
+            const token = getShareTokenFromUrl(shareUrl);
+            if (!token) {
+                addLog('❌ Не удалось определить токен из ссылки. Убедитесь, что ссылка содержит /s/...', 'error');
+                return;
+            }
+
+            const baseDomain = shareUrl.split('/s/')[0];
+            const webdavBase = getWebDavBaseUrl(baseDomain);
+            if (!webdavBase) {
+                addLog('❌ Некорректный URL-адрес облака', 'error');
+                return;
+            }
+
+            addLog(`🔑 Токен доступа: ${token}`, 'info');
+            addLog(`📡 WebDAV endpoint: ${webdavBase}`, 'info');
+            addLog(`📎 Загружен файл: ${sourceFile.name}`, 'info');
+
+            // 2. Проверить соединение с папкой
+            addLog('🕵️ Проверка доступа к облачной папке...', 'info');
+            const canAccess = await testConnection(webdavBase, token, sharePassword);
+            if (!canAccess) {
+                addLog('❌ Не удалось получить доступ к папке «1. Инструкции». Проверьте пароль папки и что шара активна.', 'error');
+                addLog('💡 Совет: попробуйте вручную открыть ссылку в браузере и ввести пароль.', 'error');
+                return;
+            }
+            addLog('✅ Доступ к папке подтверждён!', 'success');
+
+            // 3. Прочитать загруженный файл-справочник
+            let sourceWorkbook;
+            try {
+                const sourceArrayBuffer = await sourceFile.arrayBuffer();
+                sourceWorkbook = XLSX.read(sourceArrayBuffer, { type: 'array', cellStyles: true, cellNF: true });
+                addLog(`📖 Справочник прочитан, листы: ${sourceWorkbook.SheetNames.join(', ')}`, 'success');
+            } catch(e) {
+                addLog(`❌ Ошибка чтения загруженного файла: ${e.message}`, 'error');
+                return;
+            }
+
+            // 4. Обработка каждого целевого файла
+            let successCount = 0;
+            for (const target of TARGET_FILES) {
+                addLog(`⏳ Обработка: ${target.name} ...`, 'info');
+                try {
+                    // Скачать целевой файл
+                    const fileBuffer = await downloadFile(webdavBase, target.path, token, sharePassword);
+                    addLog(`📥 Скачан ${target.name} (${Math.round(fileBuffer.byteLength / 1024)} КБ)`, 'success');
+
+                    let targetWorkbook;
+                    try {
+                        targetWorkbook = XLSX.read(fileBuffer, { type: 'array', cellStyles: true, cellNF: true });
+                    } catch (err) {
+                        throw new Error(`Не удалось прочитать Excel-файл: ${err.message}`);
+                    }
+
+                    // Замена листа
+                    replaceSourcesSheet(targetWorkbook, sourceWorkbook);
+                    addLog(`✏️ Лист «Справочник Источники» успешно заменён в ${target.name}`, 'success');
+
+                    // Записать обратно в бинарный формат
+                    const newFileData = XLSX.write(targetWorkbook, { type: 'array', bookType: 'xlsx', bookSST: false });
+                    // Загрузить обратно по WebDAV
+                    await uploadFile(webdavBase, target.path, token, sharePassword, newFileData);
+                    addLog(`✅ Файл ${target.name} успешно обновлён в облаке!`, 'success');
+                    successCount++;
+                } catch (err) {
+                    addLog(`❌ Ошибка при обработке ${target.name}: ${err.message}`, 'error');
+                    // Не прерываем полностью, пробуем второй файл
+                }
+            }
+
+            if (successCount === TARGET_FILES.length) {
+                addLog(`🎉 ОБНОВЛЕНИЕ ЗАВЕРШЕНО: оба шаблона успешно обновлены.`, 'success');
+                addLog(`📌 Проверьте файлы в папке "1. Инструкции" по ссылке.`, 'success');
+            } else if (successCount > 0) {
+                addLog(`⚠️ Обновлено ${successCount} из ${TARGET_FILES.length} файлов. Проверьте ошибки выше.`, 'error');
+            } else {
+                addLog(`💥 Не удалось обновить ни одного файла. Проверьте доступ и пароль.`, 'error');
+            }
+        }
+
+        // Тест соединения только для проверки creds
+        async function testAccessOnly() {
+            const shareUrl = shareUrlInput.value.trim();
+            const sharePassword = sharePasswordInput.value.trim();
+            if (!shareUrl || !sharePassword) {
+                addLog('⚠️ Для проверки заполните ссылку и пароль папки', 'error');
+                return;
+            }
+            const token = getShareTokenFromUrl(shareUrl);
+            if (!token) {
+                addLog('❌ Неверный формат ссылки, не найден /s/токен', 'error');
+                return;
+            }
+            const baseDomain = shareUrl.split('/s/')[0];
+            const webdavBase = getWebDavBaseUrl(baseDomain);
+            if (!webdavBase) {
+                addLog('❌ Ошибка парсинга домена', 'error');
+                return;
+            }
+            addLog(`🔍 Тестируем доступ к папке "1. Инструкции" ...`, 'info');
+            const ok = await testConnection(webdavBase, token, sharePassword);
+            if (ok) {
+                addLog(`✅ Доступ успешен! Пароль и токен корректны. Можно запускать обновление.`, 'success');
+            } else {
+                addLog(`❌ Доступ запрещён. Проверьте пароль папки и наличие прав на чтение/запись.`, 'error');
+            }
+        }
+
+        // Обработчики событий
+        runBtn.addEventListener('click', () => {
+            clearLogs(false);
+            runUpdate().catch(err => {
+                addLog(`⚠️ Необработанная ошибка: ${err.message}`, 'error');
+                console.error(err);
+            });
+        });
+
+        testBtn.addEventListener('click', () => {
+            addLog(`🔧 Ручная проверка доступа...`, 'info');
+            testAccessOnly().catch(e => addLog(`Ошибка проверки: ${e.message}`, 'error'));
+        });
+
+        // Небольшая подсказка при старте
+        addLog('📌 Для обновления: введите пароль от папки, выберите XLSX-файл и нажмите "Запустить"', 'info');
+    </script>
 </body>
 </html>
