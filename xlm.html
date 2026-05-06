@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Обновление справочника источников (Nextcloud WebDAV)</title>
+    <!-- Подключаем SheetJS для работы с Excel -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background: #f1f5f9;
+            margin: 0;
+            padding: 24px 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .card {
+            max-width: 780px;
+            width: 100%;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.15);
+            overflow: hidden;
+            padding: 28px 32px 36px;
+            transition: all 0.2s;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin: 0 0 0.25rem 0;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sub {
+            color: #334155;
+            border-left: 3px solid #3b82f6;
+            padding-left: 14px;
+            margin: 12px 0 24px 0;
+            font-size: 0.9rem;
+            background: #f8fafc;
+            border-radius: 12px;
+        }
+
+        .field-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        label {
+            font-weight: 500;
+            color: #1e293b;
+            font-size: 0.85rem;
+            letter-spacing: 0.3px;
+        }
+
+        label .optional {
+            font-weight: normal;
+            color: #5b6e8c;
+            font-size: 0.75rem;
+        }
+
+        input, .file-input-wrapper {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 0.9rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 20px;
+            background: #ffffff;
+            transition: 0.2s;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+        }
+
+        .file-input-wrapper {
+            background: #f9f9ff;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            cursor: pointer;
+            border-style: dashed;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            border: none;
+            padding: 6px 0;
+            background: transparent;
+            flex: 1;
+        }
+
+        button {
+            background: #1e3a8a;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 40px;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.2s;
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        button:hover {
+            background: #2563eb;
+            transform: scale(0.99);
+        }
+
+        button:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .log-area {
+            background: #0f172a;
+            color: #e2e8f0;
+            border-radius: 20px;
+            padding: 18px 20px;
+            margin-top: 28px;
+            font-family: 'SF Mono', 'Menlo', monospace;
+            font-size: 0.8rem;
+            max-height: 320px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .log-line {
+            border-left: 2px solid #3b82f6;
+            padding-left: 12px;
+            margin: 8px 0;
+        }
+
+        .success {
+            color: #4ade80;
+        }
+
+        .error {
+            color: #f87171;
+        }
+
+        .info {
+            color: #7dd3fc;
+        }
+
+        hr {
+            margin: 20px 0 12px;
+            border: none;
+            height: 1px;
+            background: #e2e8f0;
+        }
+
+        .badge {
+            background: #eef2ff;
+            color: #1e40af;
+            border-radius: 40px;
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        .flex-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1>📁 Обновление справочника 📊</h1>
+    <div class="sub">
+        Замена листа «Справочник Источники» в файле шаблона через Nextcloud WebDAV.<br>
+        Загрузите файл <strong>111.xlsx</strong> (приложенный к заданию). Данные будут скопированы с первого листа.
+    </div>
+
+    <!-- Поля авторизации Nextcloud -->
+    <div class="field-group">
+        <label>🔐 Логин Nextcloud</label>
+        <input type="text" id="ncLogin" value="egorov.ee" placeholder="egorov.ee">
+    </div>
+    <div class="field-group">
+        <label>🔑 Пароль <span class="optional">(или пароль приложения, если включена 2FA)</span></label>
+        <input type="password" id="ncPass" placeholder="Ваш пароль / app-password">
+        <div class="badge" style="margin-top: 4px;">⚠️ Рекомендуется создать пароль приложения: Настройки → Безопасность → Пароли приложений</div>
+    </div>
+    <div class="field-group">
+        <label>📂 Путь к целевому файлу (относительно корня WebDAV)</label>
+        <input type="text" id="targetPath" value="/1. Инструкции/Ежемесячный и квартальный Шаблон МП Q2.xlsx" placeholder="/1. Инструкции/Ежемесячный и квартальный Шаблон МП Q2.xlsx">
+        <div class="badge">Пример: /1. Инструкции/шаблон.xlsx <br> ⚠️ путь чувствителен к регистру и пробелам</div>
+    </div>
+
+    <!-- Загрузка нового файла (111.xlsx) -->
+    <div class="field-group">
+        <label>📎 Файл с новыми данными (заменит справочник)</label>
+        <div class="file-input-wrapper">
+            <input type="file" id="newFileInput" accept=".xlsx, .xls, .xlsm, .xltx">
+        </div>
+        <div class="badge" style="margin-top: 4px;">Ожидается файл <strong>111.xlsx</strong> — первый лист будет скопирован как «Справочник Источники»</div>
+    </div>
+
+    <!-- Кнопка запуска процесса -->
+    <button id="runBtn">🚀 ЗАПУСТИТЬ ОБНОВЛЕНИЕ</button>
+
+    <!-- Область логов -->
+    <div class="log-area" id="logContainer">
+        <div class="log-line info">📌 Готов к работе. Выберите файл 111.xlsx, введите пароль и нажмите «Запустить».</div>
+        <div class="log-line info">🔁 Будет выполнен WebDAV GET → чтение существующего файла → замена листа → WebDAV PUT обратно.</div>
+    </div>
+    <hr>
+    <div class="flex-row" style="justify-content: space-between; font-size: 0.7rem; color: #475569;">
+        <span>⚙️ Работает через WebDAV (Basic Auth)</span>
+        <span>🔄 Требует CORS-поддержки сервера</span>
+    </div>
+</div>
+
+<script>
+    // Получение элементов DOM
+    const loginInput = document.getElementById('ncLogin');
+    const passInput = document.getElementById('ncPass');
+    const targetPathInput = document.getElementById('targetPath');
+    const fileInput = document.getElementById('newFileInput');
+    const runButton = document.getElementById('runBtn');
+    const logContainer = document.getElementById('logContainer');
+
+    // Вспомогательная функция логирования
+    function addLog(message, type = 'info') {
+        const logDiv = document.createElement('div');
+        logDiv.className = `log-line ${type}`;
+        const timestamp = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute:'2-digit', second:'2-digit' });
+        logDiv.textContent = `[${timestamp}] ${message}`;
+        logContainer.appendChild(logDiv);
+        logDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        // оставляем не более 200 записей, чтобы не перегружать
+        while(logContainer.children.length > 120) logContainer.removeChild(logContainer.firstChild);
+    }
+
+    function clearLogs(keepFirst = false) {
+        if (!keepFirst) {
+            logContainer.innerHTML = '';
+            addLog('▶️ Лог очищен', 'info');
+        } else {
+            // оставляем только последние пару строк информации, но не трогаем первый блок
+        }
+    }
+
+    // Безопасный fetch с Basic Auth и обработкой CORS
+    async function davFetch(url, method, body = null, username, password, contentType = null) {
+        const headers = {
+            'Authorization': 'Basic ' + btoa(`${username}:${password}`),
+        };
+        if (body && contentType) {
+            headers['Content-Type'] = contentType;
+        } else if (body && !contentType) {
+            // для PUT excel
+            headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+        }
+        // для WebDAV желательно указать Depth и др., но базовый GET/PUT работает.
+        const response = await fetch(url, {
+            method: method,
+            headers: headers,
+            body: body,
+            credentials: 'omit', // для CORS Basic лучше omit, иначе могут быть конфликты
+            mode: 'cors'
+        });
+        return response;
+    }
+
+    // Чтение файла из WebDAV GET (возвращает ArrayBuffer)
+    async function downloadRemoteFile(webdavUrl, username, password) {
+        addLog(`⬇️ Загружаем удалённый файл: ${webdavUrl}`, 'info');
+        const response = await davFetch(webdavUrl, 'GET', null, username, password);
+        if (!response.ok) {
+            let errText = '';
+            try {
+                errText = await response.text();
+            } catch(e) { errText = response.statusText; }
+            throw new Error(`Не удалось загрузить файл (${response.status}): ${errText.slice(0, 150)}`);
+        }
+        const arrayBuffer = await response.arrayBuffer();
+        addLog(`✅ Файл загружен, размер ${(arrayBuffer.byteLength / 1024).toFixed(1)} KB`, 'success');
+        return arrayBuffer;
+    }
+
+    // Загрузка (PUT) файла обратно в WebDAV
+    async function uploadRemoteFile(webdavUrl, fileBuffer, username, password) {
+        addLog(`⬆️ Отправка обновлённого файла в Nextcloud...`, 'info');
+        const response = await davFetch(webdavUrl, 'PUT', fileBuffer, username, password, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        if (!response.ok) {
+            let errMsg = '';
+            try {
+                errMsg = await response.text();
+            } catch(e) { errMsg = response.statusText; }
+            throw new Error(`Ошибка при записи файла (${response.status}): ${errMsg.slice(0, 150)}`);
+        }
+        addLog(`🎉 Файл успешно перезаписан! Лист «Справочник Источники» заменён.`, 'success');
+        return true;
+    }
+
+    // Чтение первого листа из загруженного локального файла (Excel) -> возвращает массив массивов (данные)
+    async function readFirstSheetFromLocalFile(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array', cellDates: false, defval: "" });
+                const firstSheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[firstSheetName];
+                // Преобразуем лист в массив массивов (включая пустые строки, учитывая весь диапазон)
+                const rawData = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: "" });
+                addLog(`📄 Первый лист исходного файла: «${firstSheetName}», строк: ${rawData.length}, столбцов: ${rawData.reduce((max, row) => Math.max(max, row.length), 0)}`, 'info');
+                if (!rawData || rawData.length === 0) reject(new Error("Локальный файл не содержит данных на первом листе"));
+                resolve(rawData);
+            };
+            reader.onerror = (err) => reject(new Error("Ошибка чтения локального файла: " + err.message));
+            reader.readAsArrayBuffer(file);
+        });
+    }
+
+    // Модификация целевой книги: замена листа "Справочник Источники" новыми данными
+    async function replaceSheetInWorkbook(targetWorkbookBuffer, newSheetData) {
+        // Читаем существующую книгу
+        const workbook = XLSX.read(targetWorkbookBuffer, { type: 'array', cellDates: false, sheetStubs: true });
+        const targetSheetName = "Справочник Источники";
+        
+        // Проверяем, существует ли уже лист с таким именем, и удаляем его, если есть
+        const sheetIndex = workbook.SheetNames.indexOf(targetSheetName);
+        if (sheetIndex !== -1) {
+            workbook.SheetNames.splice(sheetIndex, 1);
+            delete workbook.Sheets[targetSheetName];
+            addLog(`🗑️ Удалён старый лист «${targetSheetName}»`, 'info');
+        }
+        
+        // Создаём новый лист из переданных данных (массив массивов)
+        const newSheet = XLSX.utils.aoa_to_sheet(newSheetData);
+        // Опционально: установить ширину столбцов или просто добавить
+        workbook.SheetNames.push(targetSheetName);
+        workbook.Sheets[targetSheetName] = newSheet;
+        
+        addLog(`✨ Создан новый лист «${targetSheetName}» (строк: ${newSheetData.length}, столбцов: ${newSheetData[0]?.length || 0})`, 'success');
+        
+        // Записываем книгу обратно в ArrayBuffer
+        const wbout = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+        return wbout;
+    }
+
+    // Кодирование пути для WebDAV: экранирование спецсимволов, русских букв, пробелов
+    function encodeWebDavPath(relativePath) {
+        // Разбиваем по слешам, каждый компонент кодируем отдельно (чтобы слэши оставались нетронутыми)
+        const parts = relativePath.split('/');
+        const encodedParts = parts.map(part => encodeURIComponent(part));
+        let result = encodedParts.join('/');
+        // Если original начинался со слеша, добавляем
+        if (relativePath.startsWith('/')) result = '/' + result;
+        // Убираем лишние двойные кодирования, но важно сохранить
+        return result;
+    }
+
+    // ГЛАВНАЯ ФУНКЦИЯ ОБНОВЛЕНИЯ
+    async function runUpdate() {
+        // 1. Проверка ввода
+        const login = loginInput.value.trim();
+        const password = passInput.value;
+        let targetRelPath = targetPathInput.value.trim();
+        const newFile = fileInput.files[0];
+
+        if (!login) {
+            addLog('❌ Ошибка: введите логин', 'error');
+            return;
+        }
+        if (!password) {
+            addLog('❌ Ошибка: введите пароль (или пароль приложения)', 'error');
+            return;
+        }
+        if (!targetRelPath) {
+            addLog('❌ Укажите путь к целевому файлу в Nextcloud', 'error');
+            return;
+        }
+        if (!newFile) {
+            addLog('❌ Выберите файл 111.xlsx (или другой xlsx-файл с новыми данными)', 'error');
+            return;
+        }
+
+        // Нормализация пути: убираем лишние слеши, но сохраняем начальный
+        if (!targetRelPath.startsWith('/')) targetRelPath = '/' + targetRelPath;
+        // Убираем возможные двойные слеши
+        targetRelPath = targetRelPath.replace(/\/+/g, '/');
+
+        // Базовый URL WebDAV (корень пользователя)
+        const baseUrl = `https://cloud.sskuban.ru/remote.php/dav/files/${encodeURIComponent(login)}`;
+        const encodedPath = encodeWebDavPath(targetRelPath);
+        const fullWebdavUrl = baseUrl + encodedPath;
+        
+        addLog(`🌐 Целевой URL: ${fullWebdavUrl}`, 'info');
+
+        // Заблокируем кнопку на время операции
+        runButton.disabled = true;
+        const originalBtnText = runButton.innerHTML;
+        runButton.innerHTML = "⏳ Обработка... (загрузка/запись)";
+        
+        try {
+            // 2. Чтение локального файла (новые данные справочника)
+            addLog(`📂 Обработка локального файла: ${newFile.name}`, 'info');
+            const newSheetData = await readFirstSheetFromLocalFile(newFile);
+            if (!newSheetData || newSheetData.length === 0) {
+                throw new Error("Локальный файл не содержит строк данных");
+            }
+            addLog(`✅ Данные для справочника прочитаны (${newSheetData.length} строк)`, 'success');
+
+            // 3. Скачиваем текущий целевой файл из Nextcloud
+            let targetFileBuffer;
+            try {
+                targetFileBuffer = await downloadRemoteFile(fullWebdavUrl, login, password);
+            } catch (err) {
+                // Если файл не найден (404) — можно создать новый? Но по ТЗ: обновить существующий.
+                // Выдадим ошибку с инструкцией.
+                if (err.message.includes("404") || err.message.includes("Не удалось загрузить")) {
+                    throw new Error(`Целевой файл не найден по пути: ${targetRelPath}. Проверьте имя папки и файла. Ошибка: ${err.message}`);
+                } else {
+                    throw err;
+                }
+            }
+            
+            // 4. Замена листа "Справочник Источники" новыми данными
+            addLog(`🔄 Модификация книги: замена листа...`, 'info');
+            const updatedWorkbookBuffer = await replaceSheetInWorkbook(targetFileBuffer, newSheetData);
+            
+            // 5. Загружаем изменённый файл обратно в Nextcloud
+            await uploadRemoteFile(fullWebdavUrl, updatedWorkbookBuffer, login, password);
+            
+            addLog(`✅✅ ОБНОВЛЕНИЕ ЗАВЕРШЕНО УСПЕШНО! Лист «Справочник Источники» заменён содержимым из ${newFile.name}.`, 'success');
+            addLog(`📌 Совет: проверьте файл в Nextcloud, лист должен содержать ${newSheetData.length} строк с данными.`, 'info');
+        } catch (err) {
+            console.error(err);
+            let errorMessage = err.message || "Неизвестная ошибка";
+            // Дополнительные подсказки для CORS / авторизации
+            if (errorMessage.includes("Failed to fetch") || errorMessage.includes("NetworkError")) {
+                errorMessage = "⚠️ Ошибка сети или CORS: Сервер Nextcloud не разрешает кросс-доменные запросы из браузера. " +
+                               "Попробуйте расширение браузера для отключения CORS, либо убедитесь, что сервер cloud.sskuban.ru отправляет заголовки CORS. " +
+                               "Также проверьте логин/пароль. " + errorMessage;
+            } else if (errorMessage.includes("401") || errorMessage.includes("Unauthorized")) {
+                errorMessage = "❌ Ошибка авторизации: неверный логин или пароль. Убедитесь, что пароль верен или используйте пароль приложения (если 2FA).";
+            }
+            addLog(`💥 Ошибка: ${errorMessage}`, 'error');
+        } finally {
+            runButton.disabled = false;
+            runButton.innerHTML = originalBtnText;
+        }
+    }
+
+    // Привязываем обработчик к кнопке
+    runButton.addEventListener('click', runUpdate);
+    
+    // Дополнительная инструкция: проверка WebDAV доступности (опционально при желании)
+    async function testConnection() {
+        const login = loginInput.value.trim();
+        const password = passInput.value;
+        if (!login || !password) {
+            addLog("Для проверки соединения введите логин и пароль", "error");
+            return;
+        }
+        const baseUrl = `https://cloud.sskuban.ru/remote.php/dav/files/${encodeURIComponent(login)}/`;
+        try {
+            addLog("🔍 Проверка соединения с корнем WebDAV (OPTIONS запрос)...", "info");
+            const response = await fetch(baseUrl, {
+                method: 'OPTIONS',
+                headers: { 'Authorization': 'Basic ' + btoa(`${login}:${password}`) },
+                mode: 'cors'
+            });
+            if (response.ok || response.status === 200 || response.status === 204 || response.status === 207) {
+                addLog("✅ WebDAV доступен, сервер отвечает. Теперь можно загружать файл.", "success");
+            } else {
+                addLog(`⚠️ Ответ сервера: ${response.status}. Возможны ограничения CORS, но попробуйте выполнить обновление.`, "info");
+            }
+        } catch(e) {
+            addLog(`❌ Ошибка соединения: ${e.message}. Вероятно, CORS блокирует запросы. Проверьте консоль браузера.`, "error");
+        }
+    }
+    
+    // Добавим скрытую возможность проверки (при желании пользователь может дважды кликнуть по шапке)
+    // Но не загромождаем интерфейс. Просто предложим в логах рекомендации.
+    addLog("💡 Совет: если возникают CORS-ошибки, используйте браузерное расширение типа 'CORS Unblock' или временно отключите безопасность (только для теста).", "info");
+    addLog("📎 Убедитесь, что создали пароль приложения в Nextcloud, если включена двухфакторная аутентификация.", "info");
+</script>
+</body>
+</html>
