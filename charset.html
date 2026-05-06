@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Обновление справочника источников | ССК Недвижимость</title>
-    <!-- Библиотека для работы с Excel (SheetJS) -->
+    <title>ССК МП | Обновление шаблонов из Nextcloud</title>
+    <!-- Библиотека SheetJS (XLSX) для работы с Excel-файлами -->
     <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
-    <!-- Библиотека для сохранения файлов -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -17,604 +15,576 @@
 
         body {
             font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-            background: #f0f4f8;
-            color: #1a2c3e;
+            background: #f4f7fc;
+            color: #1e2a3e;
             line-height: 1.5;
         }
 
-        /* Меню (стилизовано под гипотетический сайт — вы легко замените на своё меню) */
-        .site-menu {
-            background: #0b2b3b;
+        /* Меню сайта (по образцу основного ресурса) */
+        .site-header {
+            background: #0a2b3e;
             color: white;
             padding: 0.75rem 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .nav-menu {
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 3px solid #f5a623;
-        }
-
-        .logo-area {
-            font-weight: 700;
-            font-size: 1.4rem;
-            letter-spacing: 0.5px;
-        }
-
-        .logo-area span {
-            color: #f5a623;
-        }
-
-        .nav-links {
-            display: flex;
             gap: 1.8rem;
-            flex-wrap: wrap;
+            list-style: none;
+            align-items: center;
+            justify-content: flex-start;
         }
-
-        .nav-links a {
-            color: #ecf0f1;
+        .nav-menu li a {
+            color: #f0f9ff;
             text-decoration: none;
             font-weight: 500;
+            font-size: 1rem;
             transition: 0.2s;
+            padding: 0.3rem 0;
+            border-bottom: 2px solid transparent;
         }
-
-        .nav-links a:hover {
-            color: #f5a623;
-            text-decoration: underline;
+        .nav-menu li a:hover {
+            border-bottom-color: #ffb347;
+            color: #ffb347;
         }
-
-        /* Основной контейнер */
+        .logo-area {
+            font-weight: 700;
+            font-size: 1.3rem;
+            letter-spacing: 1px;
+            margin-right: 2rem;
+            color: #ffb347;
+        }
         .container {
-            max-width: 1280px;
+            max-width: 1300px;
             margin: 2rem auto;
-            padding: 0 24px;
+            padding: 0 1.5rem;
         }
-
         .card {
             background: white;
-            border-radius: 28px;
+            border-radius: 24px;
             box-shadow: 0 12px 28px rgba(0,0,0,0.08);
             padding: 1.8rem 2rem;
             margin-bottom: 2rem;
-            transition: all 0.2s;
+            transition: 0.2s;
         }
-
-        h1 {
-            font-size: 1.9rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: #0e4b5e;
-        }
-
-        .sub {
-            color: #4a627a;
-            margin-bottom: 1.5rem;
-            border-left: 4px solid #f5a623;
-            padding-left: 1rem;
-        }
-
-        .flex-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2rem;
-            margin: 1.5rem 0;
-        }
-
-        .upload-panel {
-            flex: 1;
-            min-width: 260px;
-            background: #f9fafc;
-            border-radius: 20px;
-            padding: 1.5rem;
-            border: 1px solid #e2e8f0;
-        }
-
-        .upload-panel h3 {
-            font-weight: 600;
+        h2 {
+            font-size: 1.6rem;
             margin-bottom: 1rem;
+            font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 8px;
-            color: #1f5068;
+            gap: 0.5rem;
+            color: #0f3b4f;
         }
-
-        .file-label {
-            background: #eef2f7;
-            border-radius: 40px;
-            padding: 0.5rem 1rem;
-            font-size: 0.85rem;
-            font-weight: 500;
-            display: inline-block;
-            margin: 0.8rem 0 0.5rem;
-            cursor: pointer;
+        h3 {
+            font-size: 1.2rem;
+            margin: 1.2rem 0 0.8rem 0;
+            color: #1e4663;
+            border-left: 4px solid #ffb347;
+            padding-left: 0.75rem;
+        }
+        .form-group {
+            margin-bottom: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+        label {
+            font-weight: 600;
+            color: #1f3b4c;
+            font-size: 0.9rem;
+        }
+        input, button {
+            padding: 0.7rem 1rem;
+            border-radius: 14px;
+            border: 1px solid #ccdbe5;
+            font-size: 0.95rem;
             transition: 0.2s;
-            border: 1px solid #cbd5e1;
+            font-family: inherit;
         }
-
-        .file-label:hover {
-            background: #e2e8f0;
+        input:focus {
+            outline: none;
+            border-color: #ff9f3d;
+            box-shadow: 0 0 0 3px rgba(255, 179, 71, 0.2);
         }
-
-        input[type="file"] {
-            display: none;
-        }
-
-        .file-name {
-            font-size: 0.85rem;
-            color: #2c5a74;
-            margin: 5px 0 8px;
-            word-break: break-all;
-            background: #f1f5f9;
-            padding: 0.3rem 0.6rem;
-            border-radius: 16px;
-            display: inline-block;
-        }
-
-        .badge {
-            background: #e6f7f0;
-            color: #1d7e5c;
-            border-radius: 40px;
-            padding: 0.2rem 0.8rem;
-            font-size: 0.75rem;
-            font-weight: 500;
-        }
-
         button {
-            background: #f5a623;
+            background: #0f3b4f;
+            color: white;
+            font-weight: 600;
             border: none;
-            padding: 12px 24px;
-            border-radius: 40px;
-            font-weight: 700;
-            font-size: 1rem;
-            color: #1e2f3a;
             cursor: pointer;
             transition: 0.2s;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        button:hover {
+            background: #ff8c1a;
+            transform: translateY(-1px);
+        }
+        button:active {
+            transform: translateY(1px);
+        }
+        .btn-primary {
+            background: #ff8c1a;
+            color: #1e2a3e;
+            font-size: 1rem;
+            padding: 0.8rem 1.5rem;
             margin-top: 0.5rem;
         }
-
-        button:hover {
-            background: #e09200;
-            transform: translateY(-1px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-        }
-
-        .btn-secondary {
-            background: #2c5a74;
+        .btn-primary:hover {
+            background: #e67600;
             color: white;
-            margin-left: 0.8rem;
         }
-
-        .btn-secondary:hover {
-            background: #1f4560;
+        .file-input {
+            background: #f8fafc;
+            border: 1px dashed #94a3b8;
+            cursor: pointer;
         }
-
-        .action-bar {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            margin: 1.5rem 0 1rem;
-        }
-
-        .log-area {
-            background: #1e2a36;
-            color: #cbd5e6;
-            font-family: 'Fira Code', monospace;
-            font-size: 0.85rem;
-            border-radius: 24px;
-            padding: 1.2rem;
-            margin-top: 1.5rem;
-            max-height: 240px;
+        .status-area {
+            background: #f1f5f9;
+            border-radius: 20px;
+            padding: 1rem 1.4rem;
+            margin: 1rem 0;
+            font-family: monospace;
+            font-size: 0.9rem;
+            border-left: 5px solid #ffb347;
+            max-height: 280px;
             overflow-y: auto;
         }
-
-        .log-area p {
-            margin: 0.3rem 0;
-            border-bottom: 1px solid #2f3e4a;
-            padding-bottom: 0.2rem;
+        .log-line {
+            padding: 0.2rem 0;
+            border-bottom: 1px solid #e2e8f0;
+            font-family: 'SF Mono', monospace;
         }
-
-        .success {
-            color: #a3e4c2;
+        .log-success {
+            color: #1e7b3e;
         }
-        .error {
-            color: #f9b5af;
+        .log-error {
+            color: #c7254e;
+            font-weight: 500;
+        }
+        .log-info {
+            color: #2c6e9e;
+        }
+        .flex-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.2rem;
+            align-items: flex-end;
+        }
+        .note {
+            background: #eef2ff;
+            padding: 0.8rem 1.2rem;
+            border-radius: 18px;
+            font-size: 0.8rem;
+            color: #2c3e66;
+            margin-top: 1rem;
         }
         hr {
             margin: 1rem 0;
-            border-color: #e2edf2;
+            border: none;
+            height: 1px;
+            background: linear-gradient(to right, #cbd5e1, transparent);
+        }
+        .badge {
+            background: #ffb34720;
+            border-radius: 40px;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #a66300;
         }
         footer {
             text-align: center;
-            margin: 2rem 0 1rem;
+            padding: 2rem 1rem;
+            color: #5b6e8c;
             font-size: 0.8rem;
-            color: #5c6f87;
+            border-top: 1px solid #dce5ec;
+            margin-top: 1rem;
         }
-        @media (max-width: 780px) {
-            .site-menu {
-                flex-direction: column;
-                gap: 8px;
-                text-align: center;
-            }
-            .card {
-                padding: 1.2rem;
-            }
+        @media (max-width: 680px) {
+            .container { padding: 0 1rem; }
+            .card { padding: 1.2rem; }
+            .nav-menu { gap: 1rem; }
+            .logo-area { font-size: 1rem; margin-right: 0.5rem; }
         }
     </style>
 </head>
 <body>
+    <header class="site-header">
+        <ul class="nav-menu">
+            <li class="logo-area🏠">🏢 ССК МОЛЛ ПРОЕКТ</li>
+            <li><a href="#">Главная</a></li>
+            <li><a href="#">Шаблоны МП</a></li>
+            <li><a href="#">Обновление данных</a></li>
+            <li><a href="#">Инструкции</a></li>
+            <li><a href="#">Поддержка</a></li>
+        </ul>
+    </header>
 
-<!-- ⚡ Меню сайта — вы можете заменить блок .site-menu на свою реальную навигацию -->
-<div class="site-menu">
-    <div class="logo-area">🏢 ССК <span>Недвижимость</span></div>
-    <div class="nav-links">
-        <a href="#">Главная</a>
-        <a href="#">Отчеты</a>
-        <a href="#">Шаблоны МП</a>
-        <a href="#">Справочники</a>
-        <a href="#">Поддержка</a>
-    </div>
-</div>
+    <div class="container">
+        <div class="card">
+            <h2>📄 Обновление справочника источников в шаблонах МП</h2>
+            <p>Система заменит лист <strong>«Справочник Источники»</strong> в двух файлах: <br>
+            <code>Ежемесячный и квартальный Шаблон МП Q2.xlsx</code> и <code>Еженедельный Шаблон МП Q2.xlsx</code> <br>
+            на данные из загруженного вами XLSX-файла (формат как в примере 221.xlsx).<br>
+            Работает через публичный WebDAV Nextcloud (с доступом по паролю папки).</p>
+            <hr>
+            
+            <h3>🔐 Доступ к Nextcloud (публичная шара)</h3>
+            <div class="form-group">
+                <label>🌐 Ссылка на общую папку (share link)</label>
+                <input type="text" id="shareUrl" value="https://cloud.sskuban.ru/s/JRqdp5gyykssLtD" placeholder="https://cloud.sskuban.ru/s/........">
+                <div class="badge" style="margin-top: 5px;">Из ссылки автоматически берётся токен доступа</div>
+            </div>
+            <div class="form-group">
+                <label>🔑 Пароль папки (установленный для общей ссылки)</label>
+                <input type="password" id="sharePassword" placeholder="Введите пароль от папки JRqdp5gyykssLtD" autocomplete="off">
+                <div class="note">⚠️ Пароль защищает доступ к папке «1. Инструкции» и файлам. Без него редактирование невозможно.</div>
+            </div>
 
-<div class="container">
-    <div class="card">
-        <h1>📁 Обновление справочника источников</h1>
-        <div class="sub">
-            Загрузите файл с новыми данными (формат .xlsx, пример — 111.xlsx). <br>
-            Данные будут скопированы в лист <strong>«Справочник Источники»</strong> шаблонов МП (ежемесячный/еженедельный).
+            <h3>📂 Загрузите новый справочник источников (XLSX)</h3>
+            <div class="form-group">
+                <label>📎 Файл с актуальными данными (формат как 221.xlsx)</label>
+                <input type="file" id="sourceFile" accept=".xlsx, .xls, .xlsm" class="file-input">
+                <div class="badge">Лист «Справочник Источники» (или первый лист) заменит данные в шаблонах</div>
+            </div>
+
+            <div class="flex-row">
+                <button id="runUpdateBtn" class="btn-primary">🚀 Запустить обновление шаблонов</button>
+                <button id="testConnectionBtn" style="background: #5f7f9e;">🔌 Проверить доступ к папке</button>
+            </div>
+
+            <h3>📋 Ход выполнения и результат</h3>
+            <div id="logContainer" class="status-area">
+                <div class="log-line log-info">⚡ Готов к работе. Заполните пароль папки и выберите файл справочника.</div>
+                <div class="log-line log-info">📌 Будет заменён лист «Справочник Источники» в двух целевых файлах.</div>
+            </div>
         </div>
-
-        <!-- 3 панели загрузки -->
-        <div class="flex-grid">
-            <!-- Панель 1: Новые данные (справочник) -->
-            <div class="upload-panel">
-                <h3>📎 1. Новые данные справочника</h3>
-                <label class="file-label" for="sourceFile">📂 Выбрать файл (XLSX)</label>
-                <input type="file" id="sourceFile" accept=".xlsx, .xls, .csv, .xlsm">
-                <div id="sourceFileName" class="file-name">Файл не выбран</div>
-                <div class="badge">Обязательно</div>
-                <p style="font-size: 12px; margin-top: 10px; opacity:0.7;">Ожидается структура как в 111.xlsx: заголовки в строке (Лидогенерация, Медийная_реклама...), ниже — список источников.</p>
-            </div>
-
-            <!-- Панель 2: Ежемесячный шаблон -->
-            <div class="upload-panel">
-                <h3>📆 2. Ежемесячный шаблон МП Q2</h3>
-                <label class="file-label" for="monthlyTemplate">📂 Загрузить «Ежемесячный и квартальный Шаблон МП Q2.xlsx»</label>
-                <input type="file" id="monthlyTemplate" accept=".xlsx, .xls, .xlsm">
-                <div id="monthlyFileName" class="file-name">Не загружен</div>
-                <div class="badge">Обязателен для обновления</div>
-            </div>
-
-            <!-- Панель 3: Еженедельный шаблон -->
-            <div class="upload-panel">
-                <h3>📅 3. Еженедельный шаблон МП Q2</h3>
-                <label class="file-label" for="weeklyTemplate">📂 Загрузить «Еженедельный Шаблон МП Q2.xlsx»</label>
-                <input type="file" id="weeklyTemplate" accept=".xlsx, .xls, .xlsm">
-                <div id="weeklyFileName" class="file-name">Не загружен</div>
-                <div class="badge">Обязателен для обновления</div>
-            </div>
-        </div>
-
-        <div class="action-bar">
-            <div>
-                <button id="updateBothBtn">🔄 Запустить обновление (оба шаблона)</button>
-                <button id="resetBtn" class="btn-secondary">🗑 Сбросить всё</button>
-            </div>
-            <span style="font-size:14px; background:#f5f0e6; padding:0 12px; border-radius: 20px;">⚙️ Версия 2.0</span>
-        </div>
-
-        <!-- Блок с результатами и логами -->
-        <div class="log-area" id="logPanel">
-            <p>✨ Готов к работе. Загрузите файлы и нажмите «Запустить обновление».</p>
-            <p>📌 После обработки вы скачаете обновлённые Excel-файлы (с префиксом "ОБНОВЛЕННЫЙ_").</p>
-            <p>✅ Затем вручную замените файлы в папке Nextcloud <br> <code>cloud.sskuban.ru/s/JRqdp5gyykssLtD/1. Инструкции/</code></p>
+        <div class="note" style="background:#fef9e6;">
+            💡 <strong>Инструкция:</strong> Для работы требуется пароль от общей папки Nextcloud (выданный отдельно). 
+            Функционал использует WebDAV публичных ресурсов Nextcloud. Обновление происходит напрямую в облаке. 
+            Если возникает ошибка CORS — необходимо, чтобы администратор Nextcloud разрешил CORS-заголовки или используйте 
+            браузерное расширение (в крайнем случае). Стандартные настройки Nextcloud 30 позволяют обращаться к public.php/webdav.
         </div>
     </div>
     <footer>
-        🔄 Данные заменяются на листе «Справочник Источники» (полная замена содержимого). <br>
-        Остальные листы и формулы в шаблонах сохраняются. <br>
-        Если в шаблоне нет такого листа — он будет создан.
+        © 2025 ССК Молл Проект — автоматическое обновление справочников через Nextcloud API
     </footer>
-</div>
 
-<script>
-    // ----- Глобальные переменные для хранения файлов (ArrayBuffer) -----
-    let sourceDataBuffer = null;      // новый справочник
-    let monthlyBuffer = null;         // ежемесячный
-    let weeklyBuffer = null;          // еженедельный
+    <script>
+        // ---------- Глобальные элементы ----------
+        const shareUrlInput = document.getElementById('shareUrl');
+        const sharePasswordInput = document.getElementById('sharePassword');
+        const sourceFileInput = document.getElementById('sourceFile');
+        const runBtn = document.getElementById('runUpdateBtn');
+        const testBtn = document.getElementById('testConnectionBtn');
+        const logContainer = document.getElementById('logContainer');
 
-    // Элементы DOM
-    const sourceInput = document.getElementById('sourceFile');
-    const monthlyInput = document.getElementById('monthlyTemplate');
-    const weeklyInput = document.getElementById('weeklyTemplate');
+        // Имена целевых файлов и путь внутри папки "1. Инструкции"
+        const TARGET_FILES = [
+            { name: "Ежемесячный и квартальный Шаблон МП Q2.xlsx", path: "/1. Инструкции/Ежемесячный и квартальный Шаблон МП Q2.xlsx" },
+            { name: "Еженедельный Шаблон МП Q2.xlsx", path: "/1. Инструкции/Еженедельный Шаблон МП Q2.xlsx" }
+        ];
 
-    const sourceNameSpan = document.getElementById('sourceFileName');
-    const monthlyNameSpan = document.getElementById('monthlyFileName');
-    const weeklyNameSpan = document.getElementById('weeklyFileName');
-
-    const updateBtn = document.getElementById('updateBothBtn');
-    const resetBtn = document.getElementById('resetBtn');
-    const logPanel = document.getElementById('logPanel');
-
-    // Вспомогательная функция логов
-    function addLog(message, isError = false) {
-        const p = document.createElement('p');
-        p.innerHTML = isError ? `❌ ${message}` : `✅ ${message}`;
-        if (!isError) p.style.color = '#b9f6ca';
-        else p.style.color = '#ffb4a2';
-        logPanel.appendChild(p);
-        p.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        // ограничим количество логов, удаляя старые
-        while (logPanel.children.length > 35) {
-            logPanel.removeChild(logPanel.firstChild);
+        // Вспомогательные функции логирования
+        function addLog(message, type = 'info') {
+            const logDiv = document.createElement('div');
+            logDiv.className = `log-line log-${type}`;
+            const timestamp = new Date().toLocaleTimeString('ru-RU', { hour12: false });
+            logDiv.innerText = `[${timestamp}] ${message}`;
+            logContainer.appendChild(logDiv);
+            logDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
-    }
 
-    function clearLogs() {
-        logPanel.innerHTML = '';
-        addLog('Логи очищены. Готов к обработке.', false);
-    }
-
-    // Чтение файла в ArrayBuffer
-    function readFileAsBuffer(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = (e) => resolve(e.target.result);
-            reader.onerror = (err) => reject(err);
-            reader.readAsArrayBuffer(file);
-        });
-    }
-
-    // ---- Обработчики загрузки файлов ----
-    sourceInput.addEventListener('change', async (e) => {
-        const file = e.target.files[0];
-        if (!file) {
-            sourceDataBuffer = null;
-            sourceNameSpan.innerText = 'Файл не выбран';
-            return;
-        }
-        try {
-            sourceDataBuffer = await readFileAsBuffer(file);
-            sourceNameSpan.innerText = `📄 ${file.name} (${(file.size/1024).toFixed(1)} КБ)`;
-            addLog(`Новый справочник загружен: ${file.name}`, false);
-        } catch (err) {
-            addLog(`Ошибка чтения файла-источника: ${err.message}`, true);
-            sourceDataBuffer = null;
-            sourceNameSpan.innerText = 'Ошибка загрузки';
-        }
-    });
-
-    monthlyInput.addEventListener('change', async (e) => {
-        const file = e.target.files[0];
-        if (!file) {
-            monthlyBuffer = null;
-            monthlyNameSpan.innerText = 'Не загружен';
-            return;
-        }
-        try {
-            monthlyBuffer = await readFileAsBuffer(file);
-            monthlyNameSpan.innerText = `📆 ${file.name} (${(file.size/1024).toFixed(1)} КБ)`;
-            addLog(`Ежемесячный шаблон загружен: ${file.name}`, false);
-        } catch (err) {
-            addLog(`Ошибка чтения ежемесячного шаблона: ${err.message}`, true);
-            monthlyBuffer = null;
-            monthlyNameSpan.innerText = 'Ошибка';
-        }
-    });
-
-    weeklyInput.addEventListener('change', async (e) => {
-        const file = e.target.files[0];
-        if (!file) {
-            weeklyBuffer = null;
-            weeklyNameSpan.innerText = 'Не загружен';
-            return;
-        }
-        try {
-            weeklyBuffer = await readFileAsBuffer(file);
-            weeklyNameSpan.innerText = `📅 ${file.name} (${(file.size/1024).toFixed(1)} КБ)`;
-            addLog(`Еженедельный шаблон загружен: ${file.name}`, false);
-        } catch (err) {
-            addLog(`Ошибка чтения еженедельного шаблона: ${err.message}`, true);
-            weeklyBuffer = null;
-            weeklyNameSpan.innerText = 'Ошибка';
-        }
-    });
-
-    // ----- Основная логика: извлечение данных из справочника (источник) -----
-    // Функция: прочитать workbook, найти первый лист, извлечь данные для справочника.
-    // Возвращает массив массивов (строки, начиная с заголовков + данные)
-    // Алгоритм: ищем строку, где в первом столбце встречается "Лидогенерация" или "Медийная_реклама" либо первый непустой заголовок.
-    // В примере 111.xlsx: строка 2 (индекс 2) содержит заголовки. Пропускаем верхние служебные строки.
-    function extractSourceData(workbook) {
-        const firstSheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[firstSheetName];
-        if (!worksheet) throw new Error('Не удалось найти лист в файле-источнике');
-        
-        // Преобразуем в массив массивов (range)
-        const rawData = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: "" });
-        if (!rawData || rawData.length < 3) throw new Error('Файл источников слишком мал или пуст');
-        
-        // Поиск строки с заголовками. Ищем строку, где первый элемент содержит ключевое слово "Лидогенерация" или "Медийная_реклама" 
-        // либо первая ячейка не пуста и похожа на заголовок (для надёжности).
-        let headerRowIndex = -1;
-        const possibleHeaders = ["Лидогенерация", "Медийная_реклама", "SEO_Органика", "SMM", "Базы_недвижимости"];
-        for (let i = 0; i < Math.min(rawData.length, 30); i++) {
-            const firstCell = rawData[i]?.[0] ? String(rawData[i][0]).trim() : '';
-            if (possibleHeaders.includes(firstCell)) {
-                headerRowIndex = i;
-                break;
-            }
-            // дополнительная проверка: если в строке есть хотя бы три из ключевых слов в любых колонках
-            if (rawData[i] && rawData[i].length > 3) {
-                let matchCount = 0;
-                for (let col of rawData[i]) {
-                    if (col && typeof col === 'string' && possibleHeaders.some(h => col.includes(h) || h === col)) {
-                        matchCount++;
-                        if (matchCount >= 2) { headerRowIndex = i; break; }
-                    }
-                }
-                if (headerRowIndex !== -1) break;
-            }
-        }
-        
-        if (headerRowIndex === -1) {
-            // fallback: попробуем считать, что заголовки в третьей строке (индекс 2) как в примере
-            if (rawData.length > 2 && rawData[2] && rawData[2][0] && (rawData[2][0] === "Лидогенерация" || rawData[2][0] === "Медийная_реклама")) {
-                headerRowIndex = 2;
+        function clearLogs(keepInitial = false) {
+            if (!keepInitial) {
+                logContainer.innerHTML = '';
+                addLog('🔄 Новая сессия обновления', 'info');
             } else {
-                throw new Error('Не удалось автоматически определить строку заголовков. Убедитесь, что файл содержит столбцы: Лидогенерация, Медийная_реклама и т.д.');
-            }
-        }
-        
-        // начиная с headerRowIndex и до конца — заголовок + данные
-        const resultRows = [];
-        // Копируем строки, начиная с заголовка, до последней непустой строки (хотя бы одна ячейка)
-        let maxCols = 0;
-        for (let i = headerRowIndex; i < rawData.length; i++) {
-            const row = rawData[i];
-            if (!row || row.length === 0) continue;
-            // проверяем, что строка не полностью пустая (все ячейки пусты/undefined)
-            const hasData = row.some(cell => cell !== undefined && cell !== null && String(cell).trim() !== '');
-            if (!hasData && i > headerRowIndex+1) break; // пустая строка после данных останавливает
-            if (hasData || i === headerRowIndex) {
-                resultRows.push([...row]);
-                if (row.length > maxCols) maxCols = row.length;
-            }
-        }
-        if (resultRows.length === 0) throw new Error('Не найдены данные справочника после заголовков');
-        
-        // выровняем все строки по максимальной длине столбцов, чтобы не потерять данные
-        for (let i = 0; i < resultRows.length; i++) {
-            if (resultRows[i].length < maxCols) {
-                resultRows[i] = [...resultRows[i], ...Array(maxCols - resultRows[i].length).fill("")];
-            }
-        }
-        
-        return resultRows;
-    }
-    
-    // Функция обновления конкретного шаблона (buffer входящий, новые данные справочника)
-    // возвращает новый ArrayBuffer для скачивания
-    function updateTemplateWithSource(templateBuffer, sourceRowsArray, templateTypeName) {
-        // читаем workbook шаблона
-        const workbook = XLSX.read(templateBuffer, { type: 'array', cellFormula: true, cellStyles: true });
-        // найти или создать лист "Справочник Источники"
-        let targetSheetName = "Справочник Источники";
-        if (!workbook.SheetNames.includes(targetSheetName)) {
-            // если нет — создаём
-            const newSheet = XLSX.utils.aoa_to_sheet([]);
-            workbook.SheetNames.push(targetSheetName);
-            workbook.Sheets[targetSheetName] = newSheet;
-            addLog(`В шаблоне "${templateTypeName}" создан лист "${targetSheetName}"`, false);
-        }
-        
-        // Теперь преобразуем sourceRowsArray в worksheet (полная замена)
-        const newSheet = XLSX.utils.aoa_to_sheet(sourceRowsArray);
-        // опционально: автоширина колонок для красоты (необязательно, но приятно)
-        if (sourceRowsArray.length > 0) {
-            const colWidths = [];
-            const maxCols = sourceRowsArray[0].length;
-            for (let c = 0; c < maxCols; c++) {
-                let maxLen = 10;
-                for (let r = 0; r < Math.min(sourceRowsArray.length, 200); r++) {
-                    const cellValue = sourceRowsArray[r][c];
-                    if (cellValue) {
-                        let len = String(cellValue).length;
-                        if (len > maxLen) maxLen = Math.min(len, 45);
+                // удаляем только технические, но оставляем системные — по желанию
+                const keepLines = [];
+                for (let child of logContainer.children) {
+                    if (child.innerText.includes('Готов к работе') || child.innerText.includes('заменён лист')) {
+                        keepLines.push(child.cloneNode(true));
                     }
                 }
-                colWidths.push({ wch: maxLen + 2 });
+                logContainer.innerHTML = '';
+                if (keepLines.length) keepLines.forEach(l => logContainer.appendChild(l));
+                else addLog('⚡ Готов к обновлению.', 'info');
             }
-            newSheet['!cols'] = colWidths;
         }
-        
-        // заменяем лист
-        workbook.Sheets[targetSheetName] = newSheet;
-        
-        // сохраняем workbook в ArrayBuffer
-        const wbout = XLSX.write(workbook, { bookType: 'xlsx', type: 'array', bookSST: false });
-        return wbout;
-    }
-    
-    // Главная функция обновления двух шаблонов
-    async function runUpdate() {
-        // проверки наличия всех файлов
-        if (!sourceDataBuffer) {
-            addLog('Ошибка: не загружен файл новых данных (справочник источников).', true);
-            return;
+
+        // Получить токен из share URL (после /s/)
+        function getShareTokenFromUrl(url) {
+            try {
+                const cleanUrl = url.trim();
+                const sIndex = cleanUrl.indexOf('/s/');
+                if (sIndex === -1) return null;
+                let tokenPart = cleanUrl.substring(sIndex + 3);
+                const slashIndex = tokenPart.indexOf('/');
+                if (slashIndex !== -1) tokenPart = tokenPart.substring(0, slashIndex);
+                if (tokenPart.includes('?')) tokenPart = tokenPart.split('?')[0];
+                return tokenPart || null;
+            } catch(e) { return null; }
         }
-        if (!monthlyBuffer) {
-            addLog('Ошибка: не загружен ежемесячный шаблон (.xlsx).', true);
-            return;
+
+        // Базовый URL для WebDAV публичного доступа
+        function getWebDavBaseUrl(domainUrl) {
+            // извлекаем протокол + домен без пути
+            let urlObj;
+            try {
+                urlObj = new URL(domainUrl);
+            } catch(e) {
+                return null;
+            }
+            return `${urlObj.protocol}//${urlObj.host}/public.php/webdav`;
         }
-        if (!weeklyBuffer) {
-            addLog('Ошибка: не загружен еженедельный шаблон (.xlsx).', true);
-            return;
+
+        // Создание заголовков авторизации (Basic: токен:пароль)
+        function getAuthHeaders(token, password) {
+            const credentials = btoa(`${token}:${password}`);
+            return {
+                'Authorization': `Basic ${credentials}`,
+                'Content-Type': 'application/octet-stream'
+            };
         }
-        
-        addLog('⏳ Начинаем обработку... Извлечение данных справочника из загруженного файла.', false);
-        try {
-            // 1. Прочитать файл-источник и сформировать массив строк для замены
-            const sourceWorkbook = XLSX.read(sourceDataBuffer, { type: 'array', cellFormula: false });
-            const sourceRows = extractSourceData(sourceWorkbook);
-            if (!sourceRows.length) throw new Error('Не удалось извлечь данные из справочника');
-            addLog(`Из справочника получено ${sourceRows.length} строк (включая заголовки). Первая строка: ${sourceRows[0]?.[0] ?? 'пусто'}`, false);
-            
-            // 2. Обновить ежемесячный шаблон
-            addLog('🔄 Обновляем ежемесячный шаблон...', false);
-            const updatedMonthlyBuffer = updateTemplateWithSource(monthlyBuffer, sourceRows, 'Ежемесячный');
-            // 3. Обновить еженедельный шаблон
-            addLog('🔄 Обновляем еженедельный шаблон...', false);
-            const updatedWeeklyBuffer = updateTemplateWithSource(weeklyBuffer, sourceRows, 'Еженедельный');
-            
-            // 4. Скачивание файлов с префиксом
-            const monthlyBlob = new Blob([updatedMonthlyBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-            const weeklyBlob = new Blob([updatedWeeklyBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-            
-            // Имена для скачивания: сохраняем оригинальные имена, если были, добавляем “_обновленный”
-            let monthlyOrigName = monthlyInput.files[0]?.name || 'Ежемесячный_шаблон_МП_Q2.xlsx';
-            let weeklyOrigName = weeklyInput.files[0]?.name || 'Еженедельный_шаблон_МП_Q2.xlsx';
-            let monthlyDownloadName = monthlyOrigName.replace(/\.xlsx$/i, '_обновленный.xlsx');
-            let weeklyDownloadName = weeklyOrigName.replace(/\.xlsx$/i, '_обновленный.xlsx');
-            if (!monthlyDownloadName.includes('_обновленный')) monthlyDownloadName = 'ОБНОВЛЕННЫЙ_' + monthlyOrigName;
-            if (!weeklyDownloadName.includes('_обновленный')) weeklyDownloadName = 'ОБНОВЛЕННЫЙ_' + weeklyOrigName;
-            
-            saveAs(monthlyBlob, monthlyDownloadName);
-            saveAs(weeklyBlob, weeklyDownloadName);
-            
-            addLog(`✅ УСПЕХ! Ежемесячный шаблон сохранён как: ${monthlyDownloadName}`, false);
-            addLog(`✅ УСПЕХ! Еженедельный шаблон сохранён как: ${weeklyDownloadName}`, false);
-            addLog(`📁 Лист "Справочник Источники" в обоих файлах полностью обновлён (${sourceRows.length} строк).`, false);
-            addLog(`🎯 Теперь загрузите эти файлы в облако Nextcloud в папку "1. Инструкции", заменив старые версии.`, false);
-        } catch (err) {
-            console.error(err);
-            addLog(`❌ Критическая ошибка при обновлении: ${err.message}`, true);
-            addLog(`Проверьте формат загружаемого файла-источника. Должен содержать строку заголовков: Лидогенерация, Медийная_реклама...`, true);
+
+        // Выполнение запроса через fetch с авторизацией и обработкой ошибок
+        async function webdavRequest(url, method, body = null, headers = {}) {
+            const response = await fetch(url, {
+                method: method,
+                headers: headers,
+                body: body,
+                credentials: 'omit'
+            });
+            if (!response.ok) {
+                let errorText = `HTTP ${response.status}`;
+                if (response.status === 401) errorText = 'Неверный токен/пароль (401) — проверьте пароль папки или токен';
+                else if (response.status === 404) errorText = 'Файл или папка не найдены (404)';
+                else if (response.status === 403) errorText = 'Доступ запрещён (403) — недостаточно прав на запись';
+                else errorText = `${errorText} ${response.statusText}`;
+                throw new Error(errorText);
+            }
+            return response;
         }
-    }
-    
-    // Сброс всех загруженных файлов и очистка интерфейса
-    function resetAll() {
-        sourceInput.value = '';
-        monthlyInput.value = '';
-        weeklyInput.value = '';
-        sourceDataBuffer = null;
-        monthlyBuffer = null;
-        weeklyBuffer = null;
-        sourceNameSpan.innerText = 'Файл не выбран';
-        monthlyNameSpan.innerText = 'Не загружен';
-        weeklyNameSpan.innerText = 'Не загружен';
-        clearLogs();
-        addLog('Все файлы сброшены. Выберите заново справочник и шаблоны.', false);
-    }
-    
-    // Назначение событий
-    updateBtn.addEventListener('click', runUpdate);
-    resetBtn.addEventListener('click', resetAll);
-    
-    // Дополнительная инициализация: наглядность
-    addLog('📌 Загрузите файл с новыми данными (как в примере 111.xlsx) и два файла шаблонов из облака.', false);
-    addLog('💡 После нажатия кнопки вы получите обновленные файлы для скачивания.', false);
-</script>
+
+        // Скачать файл как ArrayBuffer
+        async function downloadFile(webdavBase, relativePath, token, password) {
+            const fullUrl = `${webdavBase}${encodeURI(relativePath).replace(/\(/g, '%28').replace(/\)/g, '%29')}`;
+            const headers = getAuthHeaders(token, password);
+            // Убираем Content-Type, тк GET не требует
+            delete headers['Content-Type'];
+            const resp = await webdavRequest(fullUrl, 'GET', null, headers);
+            return await resp.arrayBuffer();
+        }
+
+        // Загрузить файл обратно (PUT)
+        async function uploadFile(webdavBase, relativePath, token, password, fileData, contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+            const fullUrl = `${webdavBase}${encodeURI(relativePath).replace(/\(/g, '%28').replace(/\)/g, '%29')}`;
+            const headers = getAuthHeaders(token, password);
+            headers['Content-Type'] = contentType;
+            const resp = await webdavRequest(fullUrl, 'PUT', fileData, headers);
+            return resp;
+        }
+
+        // Проверить доступ к корню WebDAV (или к папке 1. Инструкции)
+        async function testConnection(webdavBase, token, password) {
+            const testPath = "/1. Инструкции/";  // проверяем наличие папки
+            const fullUrl = `${webdavBase}${encodeURI(testPath)}`;
+            const headers = getAuthHeaders(token, password);
+            delete headers['Content-Type'];
+            try {
+                const response = await fetch(fullUrl, { method: 'PROPFIND', headers, credentials: 'omit' });
+                if (response.status === 207) return true; // WebDAV multistatus успех
+                if (response.ok) return true;
+                throw new Error(`Проверка доступа: ${response.status}`);
+            } catch (err) {
+                console.error('Test connection error', err);
+                return false;
+            }
+        }
+
+        // Замена листа "Справочник Источники" в workbook данными из sourceWorkbook (первый лист или лист с именем "Справочник Источники")
+        function replaceSourcesSheet(targetWorkbook, sourceWorkbook) {
+            // Определяем, какой лист брать из источника: если есть лист "Справочник Источники", берём его, иначе первый лист
+            let sourceSheet = null;
+            const sourceSheetName = "Справочник Источники";
+            if (sourceWorkbook.Sheets[sourceSheetName]) {
+                sourceSheet = sourceWorkbook.Sheets[sourceSheetName];
+            } else {
+                const firstSheetName = sourceWorkbook.SheetNames[0];
+                sourceSheet = sourceWorkbook.Sheets[firstSheetName];
+            }
+            if (!sourceSheet) throw new Error('В загруженном файле не найдено ни одного листа с данными');
+
+            // Создаём новый лист-копию (глубокое копирование)
+            const newSheet = XLSX.utils.book_new();
+            // Простой способ: скопировать диапазон через JSON (гарантия независимости)
+            const sheetJson = XLSX.utils.sheet_to_json(sourceSheet, { header: 1, defval: "" });
+            const copiedSheet = XLSX.utils.aoa_to_sheet(sheetJson);
+            // Копируем ширины колонок? опционально, но не критично
+            if (sourceSheet['!cols']) copiedSheet['!cols'] = JSON.parse(JSON.stringify(sourceSheet['!cols']));
+            if (sourceSheet['!merges']) copiedSheet['!merges'] = JSON.parse(JSON.stringify(sourceSheet['!merges']));
+
+            // Удаляем старый лист если существует
+            const targetSheetName = "Справочник Источники";
+            if (targetWorkbook.Sheets[targetSheetName]) {
+                delete targetWorkbook.Sheets[targetSheetName];
+                const idx = targetWorkbook.SheetNames.indexOf(targetSheetName);
+                if (idx !== -1) targetWorkbook.SheetNames.splice(idx, 1);
+            }
+
+            // Добавляем новый лист
+            targetWorkbook.Sheets[targetSheetName] = copiedSheet;
+            targetWorkbook.SheetNames.push(targetSheetName);
+            return true;
+        }
+
+        // Основная функция обновления
+        async function runUpdate() {
+            // 1. Получить параметры
+            const shareUrl = shareUrlInput.value.trim();
+            const sharePassword = sharePasswordInput.value.trim();
+            const sourceFile = sourceFileInput.files[0];
+
+            if (!shareUrl) {
+                addLog('❌ Укажите ссылку на общую папку Nextcloud', 'error');
+                return;
+            }
+            if (!sharePassword) {
+                addLog('❌ Введите пароль от общей папки (защищённая шара)', 'error');
+                return;
+            }
+            if (!sourceFile) {
+                addLog('❌ Выберите XLSX-файл с новым справочником источников', 'error');
+                return;
+            }
+
+            const token = getShareTokenFromUrl(shareUrl);
+            if (!token) {
+                addLog('❌ Не удалось определить токен из ссылки. Убедитесь, что ссылка содержит /s/...', 'error');
+                return;
+            }
+
+            const baseDomain = shareUrl.split('/s/')[0];
+            const webdavBase = getWebDavBaseUrl(baseDomain);
+            if (!webdavBase) {
+                addLog('❌ Некорректный URL-адрес облака', 'error');
+                return;
+            }
+
+            addLog(`🔑 Токен доступа: ${token}`, 'info');
+            addLog(`📡 WebDAV endpoint: ${webdavBase}`, 'info');
+            addLog(`📎 Загружен файл: ${sourceFile.name}`, 'info');
+
+            // 2. Проверить соединение с папкой
+            addLog('🕵️ Проверка доступа к облачной папке...', 'info');
+            const canAccess = await testConnection(webdavBase, token, sharePassword);
+            if (!canAccess) {
+                addLog('❌ Не удалось получить доступ к папке «1. Инструкции». Проверьте пароль папки и что шара активна.', 'error');
+                addLog('💡 Совет: попробуйте вручную открыть ссылку в браузере и ввести пароль.', 'error');
+                return;
+            }
+            addLog('✅ Доступ к папке подтверждён!', 'success');
+
+            // 3. Прочитать загруженный файл-справочник
+            let sourceWorkbook;
+            try {
+                const sourceArrayBuffer = await sourceFile.arrayBuffer();
+                sourceWorkbook = XLSX.read(sourceArrayBuffer, { type: 'array', cellStyles: true, cellNF: true });
+                addLog(`📖 Справочник прочитан, листы: ${sourceWorkbook.SheetNames.join(', ')}`, 'success');
+            } catch(e) {
+                addLog(`❌ Ошибка чтения загруженного файла: ${e.message}`, 'error');
+                return;
+            }
+
+            // 4. Обработка каждого целевого файла
+            let successCount = 0;
+            for (const target of TARGET_FILES) {
+                addLog(`⏳ Обработка: ${target.name} ...`, 'info');
+                try {
+                    // Скачать целевой файл
+                    const fileBuffer = await downloadFile(webdavBase, target.path, token, sharePassword);
+                    addLog(`📥 Скачан ${target.name} (${Math.round(fileBuffer.byteLength / 1024)} КБ)`, 'success');
+
+                    let targetWorkbook;
+                    try {
+                        targetWorkbook = XLSX.read(fileBuffer, { type: 'array', cellStyles: true, cellNF: true });
+                    } catch (err) {
+                        throw new Error(`Не удалось прочитать Excel-файл: ${err.message}`);
+                    }
+
+                    // Замена листа
+                    replaceSourcesSheet(targetWorkbook, sourceWorkbook);
+                    addLog(`✏️ Лист «Справочник Источники» успешно заменён в ${target.name}`, 'success');
+
+                    // Записать обратно в бинарный формат
+                    const newFileData = XLSX.write(targetWorkbook, { type: 'array', bookType: 'xlsx', bookSST: false });
+                    // Загрузить обратно по WebDAV
+                    await uploadFile(webdavBase, target.path, token, sharePassword, newFileData);
+                    addLog(`✅ Файл ${target.name} успешно обновлён в облаке!`, 'success');
+                    successCount++;
+                } catch (err) {
+                    addLog(`❌ Ошибка при обработке ${target.name}: ${err.message}`, 'error');
+                    // Не прерываем полностью, пробуем второй файл
+                }
+            }
+
+            if (successCount === TARGET_FILES.length) {
+                addLog(`🎉 ОБНОВЛЕНИЕ ЗАВЕРШЕНО: оба шаблона успешно обновлены.`, 'success');
+                addLog(`📌 Проверьте файлы в папке "1. Инструкции" по ссылке.`, 'success');
+            } else if (successCount > 0) {
+                addLog(`⚠️ Обновлено ${successCount} из ${TARGET_FILES.length} файлов. Проверьте ошибки выше.`, 'error');
+            } else {
+                addLog(`💥 Не удалось обновить ни одного файла. Проверьте доступ и пароль.`, 'error');
+            }
+        }
+
+        // Тест соединения только для проверки creds
+        async function testAccessOnly() {
+            const shareUrl = shareUrlInput.value.trim();
+            const sharePassword = sharePasswordInput.value.trim();
+            if (!shareUrl || !sharePassword) {
+                addLog('⚠️ Для проверки заполните ссылку и пароль папки', 'error');
+                return;
+            }
+            const token = getShareTokenFromUrl(shareUrl);
+            if (!token) {
+                addLog('❌ Неверный формат ссылки, не найден /s/токен', 'error');
+                return;
+            }
+            const baseDomain = shareUrl.split('/s/')[0];
+            const webdavBase = getWebDavBaseUrl(baseDomain);
+            if (!webdavBase) {
+                addLog('❌ Ошибка парсинга домена', 'error');
+                return;
+            }
+            addLog(`🔍 Тестируем доступ к папке "1. Инструкции" ...`, 'info');
+            const ok = await testConnection(webdavBase, token, sharePassword);
+            if (ok) {
+                addLog(`✅ Доступ успешен! Пароль и токен корректны. Можно запускать обновление.`, 'success');
+            } else {
+                addLog(`❌ Доступ запрещён. Проверьте пароль папки и наличие прав на чтение/запись.`, 'error');
+            }
+        }
+
+        // Обработчики событий
+        runBtn.addEventListener('click', () => {
+            clearLogs(false);
+            runUpdate().catch(err => {
+                addLog(`⚠️ Необработанная ошибка: ${err.message}`, 'error');
+                console.error(err);
+            });
+        });
+
+        testBtn.addEventListener('click', () => {
+            addLog(`🔧 Ручная проверка доступа...`, 'info');
+            testAccessOnly().catch(e => addLog(`Ошибка проверки: ${e.message}`, 'error'));
+        });
+
+        // Небольшая подсказка при старте
+        addLog('📌 Для обновления: введите пароль от папки, выберите XLSX-файл и нажмите "Запустить"', 'info');
+    </script>
 </body>
 </html>
