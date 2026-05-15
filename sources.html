@@ -473,18 +473,18 @@
 </div>
 <!-- 1. Базовая схема (из брошюры) -->
 <div id="howitworks" class="section-card">
-<div class="section-title">🔄 Как отслеживаются рекламные источники у нас</div>
+<div class="section-title">Как отслеживаются рекламные источники у нас</div>
 <p>В компании все рекламные каналы (контекст, соцсети, радио, наружка, сайты) фиксируются в <strong>едином&nbsp;справочнике</strong>. Каждому источнику присваиваются цифровые метки: UTM Source/Medium, телефон/SIP, а каждому ЖК &mdash; своя метка UTM в Campaign/Content. Это позволяет автоматически связывать лиды, звонки с конкретным источником и ЖК в Битрикс24.</p>
-<div class="info-note">🧩 <strong>Синхронизация справочников с Б24</strong> &mdash; автоматическая, каждые 30 минут. Все данные из телефонии Mango, виртуальной АТС, колл-центра, рекламных систем поступают в единую базу &mdash;&nbsp;Б24.</div>
+<div class="info-note"><strong>Синхронизация справочников с Б24</strong> &mdash; автоматическая, каждые 30 минут. Все данные из телефонии Mango, виртуальной АТС, колл-центра, рекламных систем поступают в единую базу &mdash;&nbsp;Б24.</div>
 <div class="grid-2">
 <div class="method-card">📌 <strong>Перечень источников</strong> &mdash; в справочнике источников (более 20+ типов: контекст, таргет, радио, ТВ, билборды и пр.)</div>
-<div class="method-card">🏢 <strong>Перечень ЖК</strong> &mdash; в справочнике ЖК, каждому проекту присвоена уникальная UTM-метка (dolina, vklyuchi, ...)</div>
+<div class="method-card">📌 <strong>Перечень ЖК</strong> &mdash; в справочнике ЖК, каждому проекту присвоена уникальная UTM-метка (dolina, vklyuchi, ...)</div>
 </div>
 <p><strong>Главное правило:</strong> в любой ссылке, рекламной кампании одновременно используются <span class="mark">UTM Источника + UTM ЖК</span>. Без регистрации источника &mdash; лид не определится.</p>
 </div>
 <!-- 2. Способы отслеживания (UTM, телефон, комбинации) -->
 <div id="methods" class="section-card">
-<div class="section-title">📡 Способы отслеживания&nbsp;и комбинации</div>
+<div class="section-title">Способы отслеживания&nbsp;и комбинации</div>
 <p>В зависимости от канала используются разные варианты идентификации. Все комбинации поддерживаются нашей системой:</p>
 <table>
 <thead>
@@ -520,19 +520,19 @@
 </tr>
 </tbody>
 </table>
-<div class="alert">🚨 <strong>Важно:</strong> у каждого источника должен быть как минимум один идентификатор: UTM, телефон, SIP или прямая интеграция. Дублирование UTM или номера между разными источниками запрещено &mdash; приведёт к смешению данных.</div>
+<div class="alert">📌  <strong>Важно:</strong> у каждого источника должен быть как минимум один идентификатор: UTM, телефон, SIP или прямая интеграция. Дублирование UTM или номера между разными источниками запрещено &mdash; приведёт к смешению данных.</div>
 </div>
 <!-- 3. UTM-метки: подробно + примеры из брошюры -->
 <div id="utm" class="section-card">
-<div class="section-title">🏷️ UTM-метки: стандарты и примеры</div>
+<div class="section-title">UTM-метки: стандарты и примеры</div>
 <p><strong>UTM Source и Medium источника</strong> берутся из <em>Справочника UTM</em> (например, avito, yandex_direct, 2gismedia, vk_video). <br /><strong>Метка ЖК</strong> для utm_campaign / utm_content &mdash; из <em>Справочника ЖК</em> (dolina, vklyuchi, ...).</p>
-<div class="subsection-title">✅ Корректные примеры</div>
+<div class="subsection-title">Корректные примеры</div>
 <div class="code-block"><strong>Пример 1 (Avito):</strong><br /> utm_source=<span class="mark">avito</span>&amp;utm_medium=cpc&amp;utm_campaign=sale2026&amp;utm_content=<span class="mark">dolina</span><br /><br /> <strong>Пример 2 (Яндекс Директ с подстановками):</strong><br /> utm_source=<span class="mark">yandex_direct</span>&amp;utm_medium=cpc&amp;utm_campaign={campaign_name}|{campaign_id}|{source_type}&amp;utm_content=<span class="mark">dolina</span>|{gbid}|{ad_id}|{phrase_id}|{source}|{device_type}|{banner_id}|{campaign_type}&amp;utm_term={keyword}<br /><br /> <strong>Пример 3 (2Гис):</strong><br /> utm_source=<span class="mark">2gismedia</span>&amp;utm_medium=cpc&amp;utm_campaign=ssk4152|<span class="mark">dolina</span>|sale2026</div>
 <p><strong>Пробелы в UTM запрещено использовать - это приведет к ошибке, можно нижнее подчеркивание.</strong> Перед созданием ссылки проверьте уникальность связки utm_source + utm_campaign (с меткой ЖК) в справочнике UTM. Если метки нет в справочнике &mdash; заведите новый источник или укажите UTM к имеющемуся через задачу (см. раздел &laquo;Регистрация&raquo;👇🏻).</p>
 </div>
 <!-- 4. QR-коды для офлайн-рекламы (новый раздел) -->
 <div id="qr" class="section-card">
-<div class="section-title">📲 QR-коды: мост между офлайн и онлайн-отслеживанием</div>
+<div class="section-title">📌  QR-коды: мост между офлайн и онлайн-отслеживанием</div>
 <p>QR-коды на печатной продукции, билбордах, листовках, в журналах &mdash; эффективный способ маркировки офлайн-источников. Принцип: QR ведёт на лендинг или сайт с <strong>предустановленными UTM-метками</strong>, которые регистрируются в справочнике.</p>
 <div class="grid-2">
 <div class="method-card">🔹 <strong>Как использовать:</strong><br /> - Зарегистрируйте источник (например, &laquo;Журнал Интерьер&raquo;, &laquo;Билборд на Ленина&raquo;).<br /> - Сформируйте короткую ссылку вида: <code>site.ru/zhk?utm_source=magazine_interior&amp;utm_medium=qr&amp;utm_campaign=may2026&amp;utm_content=dolina</code>.<br /> - Сгенерируйте QR-код через любой генератор.<br /> - Разместите на носителе.</div>
@@ -542,7 +542,7 @@
 </div>
 <!-- 5. Телефоны, коллтрекинг, SIP (из брошюры задачи) -->
 <div id="phones" class="section-card">
-<div class="section-title">📞 Отслеживание по телефонным номерам, SIP и динамический коллтрекинг</div>
+<div class="section-title">Отслеживание по телефонным номерам, SIP и динамический коллтрекинг</div>
 <p><strong>Справочник номеров и SIP активностей</strong> содержит все телефоны, используемые в рекламе. Каждый номер или SIP-аккаунт жёстко привязывается к источнику и ЖК. Звонок на такой номер автоматически определяет канал.</p>
 <div class="grid-2">
 <div>
@@ -554,18 +554,18 @@
 </div>
 <div class="method-card"><strong>Пример: радио Реклама</strong><br /> Запрашиваем новый номер телефона через задачу. После регистрации в справочнике номер привязывается к радио-источнику. Звонки на этот номер в Б24 упадут с правильной меткой.</div>
 </div>
-<div class="alert">🔔 Номер телефона или SIP могут использоваться как самостоятельный идентификатор (если UTM нет). Главное &mdash; уникальность номера для одного источника.</div>
+<div class="alert">📌  Номер телефона или SIP могут использоваться как самостоятельный идентификатор (если UTM нет). Главное &mdash; уникальность номера для одного источника.</div>
 </div>
 <!-- 6. Регистрация нового источника (полный шаблон из брошюры) -->
 <div id="registry" class="section-card">
-<div class="section-title">📝 Регистрация нового источника (которого нет в справочнике)</div>
+<div class="section-title">Регистрация нового источника (которого нет в справочнике)</div>
 <p><strong>Подайте данные через задачу Б24:</strong> <a class="btn-outline" href="https://bx.sskuban.ru/company/personal/user/41643/tasks/task/view/98949/" target="_blank">🔗 Задача&nbsp;по учёту источников</a></p>
 <div class="info-note"><strong>Структура заявки:</strong><br /> 1️⃣ <strong>Группа источника</strong> (из перечня: контекстная реклама, радио, SMM, офлайн-мероприятие и др.)<br /> 2️⃣ <strong>Новое название источника</strong> (уникальное, понятное)<br /> 3️⃣ <strong>UTM Source и Medium</strong> (если есть) &mdash; уникальные<br /> 4️⃣ <strong>Номер телефона / SIP</strong> (если выделен)<br /> 5️⃣ <strong>По какому ЖК</strong> (конкретный или &laquo;Все ЖК&raquo;)<br /> 6️⃣ <strong>Прямая интеграция с Б24</strong> (если есть, указать детали)<br /> <span class="mark">Важно:</span> Если выбираете &laquo;Все ЖК&raquo;, данные не привяжутся к конкретному ЖК и попадут в категорию &laquo;Не определено&raquo;.</div>
 <p><strong>Дополнительные правила:</strong> перед подачей проверьте, что UTM и телефон отсутствуют в существующих справочниках (нет дублей). После регистрации источник появится в справочнике и синхронизируется с Б24.</p>
 </div>
 <!-- 7. Регистрация активности (когда источник уже есть, а запускаем рекламу по ЖК) -->
 <div id="activity" class="section-card">
-<div class="section-title">⚙️ Регистрация активности в источнике (запуск рекламы ЖК)</div>
+<div class="section-title">Регистрация активности в источнике (запуск рекламы ЖК)</div>
 <p>Если источник уже был заведён в справочнике, но вы запускаете новую кампанию для конкретного ЖК, необходимо зарегистрировать <strong>активность</strong>. Данные подаются отдельно по каждому ЖК.</p>
 <div class="code-block">Возьмите из справочника:<br /> &bull; Группа источника<br /> &bull; Название источника (уже существующее)<br /> &bull; ЖК (один конкретный, либо &laquo;Все ЖК&raquo;, но осторожно)<br /> &bull; Номер телефона / SIP (если используется новый номер для этой активности)<br /> После подачи задачи активность фиксируется в &laquo;Справочнике активностей&raquo;.</div>
 <p><strong>Важно:</strong> Все запущенные рекламные активности по ЖК аккумулируются в справочнике активностей &mdash; это единый источник правды для аналитики. Без регистрации активности система может не связать лид с конкретной кампанией внутри одного источника.</p>
@@ -573,7 +573,7 @@
 </div>
 <!-- 8. Отчетность, синхронизация, медиапланы (из брошюры) -->
 <div id="reports" class="section-card">
-<div class="section-title">📊 Отчётность, синхронизация и медиапланы</div>
+<div class="section-title">Отчётность, синхронизация и медиапланы</div>
 <p><strong>Битрикс24 &mdash; центральная база данных</strong>, куда стекаются данные из Mango-телефонии, виртуальной АТС, колл-центра, рекламных систем, отдела продаж. Справочники синхронизируются с Б24 <strong>каждые 30 минут</strong>.</p>
 <div class="grid-2">
 <div><strong>📈 Медиапланы &mdash; важная часть отчётов</strong><br /> В них фиксируются:<br /> - планируемые и фактические расходы по источникам<br /> - планируемый объём лидов и CPL<br /> - перечень источников продвижения по каждому ЖК<br /> <a class="btn-outline" href="https://bx.sskuban.ru/company/personal/user/41643/tasks/task/view/107373/" target="_blank">📌 Задача&nbsp;заполнение&nbsp;медиапланов</a></div>
@@ -583,7 +583,7 @@
 </div>
 <!-- 9. Справочники и ссылки (единый блок) -->
 <div class="section-card">
-<div class="section-title">🗂️ Единый справочник</div>
+<div class="section-title">Единый справочник</div>
 <p><a class="btn-outline" href="https://docs.google.com/spreadsheets/d/1Jwl64t_2tgnghzLglqgqSbjNjGceo36Rn1rcbolpZVE/edit?usp=sharing" target="_blank">📂 Справочник: источники, UTM, ЖК, телефоны, активности</a></p>
 <div class="grid-2">
 <div><strong>Перечень листов внутри:</strong>
@@ -597,7 +597,7 @@
 </div>
 <div><strong>Ссылки задач (быстрый доступ):</strong><br /> - <a href="https://bx.sskuban.ru/company/personal/user/41643/tasks/task/view/98949/" target="_blank">Завести/изменить источник, добавить ЖК</a><br /> - <a href="https://bx.sskuban.ru/company/personal/user/41643/tasks/task/view/39011/" target="_blank">Выделить телефон или SIP</a><br /> - <a href="https://bx.sskuban.ru/company/personal/user/41643/tasks/task/view/108583/" target="_blank">Динамический коллтрекинг</a><br /> - <a href="https://bx.sskuban.ru/company/personal/user/41643/tasks/task/view/107373/" target="_blank">Медиапланы</a></div>
 </div>
-<div class="info-note" style="margin-top: 0.5rem;">📍 Помните: УТМ-ссылки для постов и баннеров, QR-коды для офлайна, промокоды, номера коллтрекинга &mdash; всё это звенья одной цепи. Только при комплексной маркировке мы получаем полную картину эффективности каждого канала.</div>
+<div class="info-note" style="margin-top: 0.5rem;">📌  Помните: УТМ-ссылки для постов и баннеров, QR-коды для офлайна, промокоды, номера коллтрекинга &mdash; всё это звенья одной цепи. Только при комплексной маркировке мы получаем полную картину эффективности каждого канала.</div>
 </div>
 <div class="footer">
 <p>Инструкция на основе брошюры Егорова Э. &laquo;Движение данных&raquo; (17 слайдов, 15.04.2026) и внутренних регламентов.<br /> По всем вопросам маркировки и регистрации &mdash; обращаться к аналитику  в Битрикс24.</p>
